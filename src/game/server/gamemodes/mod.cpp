@@ -14,7 +14,7 @@
 CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 : IGameController(pGameServer)
 {
-	m_pGameType = "InfClassCR";
+	m_pGameType = "InfClassCR Ex";
 	
 	m_GrowingMap = 0;
 	
@@ -540,7 +540,6 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		int Support = 0;
 		int Sciogist = 0;
 		int Reviver = 0;
-		int Joker = 0;
 		
 		CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 		while(Iter.Next())
@@ -551,6 +550,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_MERCENARY:
 				case PLAYERCLASS_SNIPER:
 				case PLAYERCLASS_MAGICIAN:
+				case PLAYERCLASS_JOKER:
 					Support++;
 					break;
 				case PLAYERCLASS_ENGINEER:
@@ -925,6 +925,7 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 			case PLAYERCLASS_NINJA:
 			case PLAYERCLASS_MERCENARY:
 			case PLAYERCLASS_SNIPER:
+			case PLAYERCLASS_MAGICIAN:
 				nbSupport++;
 				break;
 			case PLAYERCLASS_MEDIC:
@@ -999,6 +1000,12 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 		1.0f : 0.0f;
 	Probability[PLAYERCLASS_REVIVER - START_HUMANCLASS - 1] =
 		(nbReviver < g_Config.m_InfReviverLimit && g_Config.m_InfEnableReviver) ?
+		1.0f : 0.0f;
+	Probability[PLAYERCLASS_MAGICIAN - START_HUMANCLASS - 1] =
+		(nbReviver < g_Config.m_InfSupportLimit && g_Config.m_InfEnableMagician) ?
+		1.0f : 0.0f;
+	Probability[PLAYERCLASS_JOKER - START_HUMANCLASS - 1] =
+		(nbReviver < g_Config.m_InfSupportLimit && g_Config.m_InfEnableJoker) ?
 		1.0f : 0.0f;
 
 	//Random is not fair enough. We keep the last two classes took by the player, and avoid to give him those again
@@ -1134,6 +1141,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnableReviver;
 		case PLAYERCLASS_MAGICIAN:
 			return g_Config.m_InfEnableMagician;
+		case PLAYERCLASS_JOKER:
+			return g_Config.m_InfEnableJoker;
 		default:
 			return false;
 	}
@@ -1161,6 +1170,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_MERCENARY:
 			case PLAYERCLASS_SNIPER:
 			case PLAYERCLASS_MAGICIAN:
+			case PLAYERCLASS_JOKER:
 				nbSupport++;
 				break;
 			case PLAYERCLASS_MEDIC:
@@ -1206,6 +1216,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		case PLAYERCLASS_MERCENARY:
 		case PLAYERCLASS_SNIPER:
 		case PLAYERCLASS_MAGICIAN:
+		case PLAYERCLASS_JOKER:
 			return (nbSupport < g_Config.m_InfSupportLimit);
 		case PLAYERCLASS_LOOPER:
 			return (nbDefender < g_Config.m_InfDefenderLimit);

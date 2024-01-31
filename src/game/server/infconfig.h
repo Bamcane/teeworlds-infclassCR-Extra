@@ -103,6 +103,7 @@ MACRO_CONFIG_INT(InfEnableMedic, inf_enable_medic, 1, 0, 1, CFGFLAG_SERVER, "Mak
 MACRO_CONFIG_INT(InfEnableHero, inf_enable_hero, 1, 0, 1, CFGFLAG_SERVER, "Makes the hero class available")
 MACRO_CONFIG_INT(InfEnablePolice, inf_enable_police, 1, 0, 1, CFGFLAG_SERVER, "Makes the police class available")
 MACRO_CONFIG_INT(InfEnableMagician, inf_enable_magician, 1, 0, 1, CFGFLAG_SERVER, "Makes the magician class available")
+MACRO_CONFIG_INT(InfEnableJoker, inf_enable_joker, 1, 0, 1, CFGFLAG_SERVER, "Makes the joker class available")
 
 MACRO_CONFIG_INT(InfMinEngineerPlayer, inf_min_engineer_player, 8, 0, 32, CFGFLAG_SERVER, "Min engineer need player num")
 
@@ -197,6 +198,7 @@ MACRO_CONFIG_INT(InfStunGrenadeMinimalKills, inf_stun_grenade_minimal_kills, 2, 
 MACRO_CONFIG_INT(InfStunGrenadeProbability, inf_stun_grenade_probability, 30, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")
 
 MACRO_CONFIG_INT(InfFreezeMineMinimalKills, inf_freeze_mine_minimal_kills, 3, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before grenade stun ammunition can be found")
+MACRO_CONFIG_INT(InfJokerReviveNum, inf_joker_revive_num, 3, 0, 30, CFGFLAG_SERVER, "Max number of joker to revive")
 
 MACRO_CONFIG_INT(InfIgnoreSpec, inf_ignore_spec, 1, 0, 1, CFGFLAG_SERVER, "Ignore spectator number when set first infection (not count as infected)")
 #endif

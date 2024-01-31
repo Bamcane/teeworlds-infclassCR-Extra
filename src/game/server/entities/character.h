@@ -248,7 +248,10 @@ public:
 	int m_TurretCount;
 	int m_ResetKillsTime;
 	
-
+	vec2 m_JokerFlagPos;
+	vec2 m_JokerDirection;
+	bool m_FlagPut;
+	int m_ReviveNum;
 public:
 	CCharacterCore GetCore() { return m_Core; }
 	CCharacterCore *Core() { return m_pCore; }

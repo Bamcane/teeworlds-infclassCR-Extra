@@ -20,6 +20,8 @@ public:
 	int m_ExplodeTick;
 	array<int> m_IDs;
 	vec2 m_SnapIDsPos[NUM_IDS];
+
+	vec2 m_Direction;
 	
 private:
 	float m_Radius;

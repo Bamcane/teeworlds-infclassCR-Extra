@@ -588,6 +588,12 @@ static bool IntVariableCommand(IConsole::IResult *pResult, void *pUserData)
 
 		*(pData->m_pVariable) = Val;
 	}
+	else
+	{
+		char aBuf[1024];
+		str_format(aBuf, sizeof(aBuf), "Value: %d", *(pData->m_pVariable));
+		pData->m_pConsole->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Console", aBuf);
+	}
 	
 	return true;
 }
@@ -618,6 +624,12 @@ static bool StrVariableCommand(IConsole::IResult *pResult, void *pUserData)
 		}
 		else
 			str_copy(pData->m_pStr, pString, pData->m_MaxSize);
+	}
+	else
+	{
+		char aBuf[1024];
+		str_format(aBuf, sizeof(aBuf), "Value: %s", *(pData->m_pStr));
+		pData->m_pConsole->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Console", aBuf);
 	}
 	
 	return true;

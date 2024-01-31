@@ -42,16 +42,16 @@ void CPoliceShield::Tick()
 	if(!GameServer()->GetPlayerChar(m_Owner) || GameServer()->GetPlayerChar(m_Owner)->IsZombie())
 	{
 		GameServer()->m_World.DestroyEntity(this);
+		return;
 	}else
 	{
-		m_OwnerChrCore = GameServer()->GetPlayerChar(m_Owner)->GetCore();
+		m_Direction = normalize(vec2(GameServer()->GetPlayerChar(m_Owner)->GetCore().m_Input.m_TargetX, GameServer()->GetPlayerChar(m_Owner)->GetCore().m_Input.m_TargetY));
 	}
 
 	if(m_ExplodeTick)
 		m_ExplodeTick--;
 
-    m_Pos = m_OwnerChrCore.m_Pos;
-    int Angle = int(m_OwnerChrCore.m_Angle / 4.5);
+    m_Pos = GameServer()->GetPlayerChar(m_Owner)->m_Pos;
 
     for(CCharacter *pChr = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
 	{
@@ -109,7 +109,7 @@ void CPoliceShield::Snap(int SnappingClient)
 	if(IsDontSnapEntity(SnappingClient))
 		return;
 
-	int Degres = int((m_OwnerChrCore.m_Angle + 200) / 4.5);
+	int Degres = (int)(atan2f(m_Direction.y, m_Direction.x) * 180.0f / pi + 360) % 360 + 45;
 
 	for(int i=0;i < CPoliceShield::NUM_IDS;i++)
 	{

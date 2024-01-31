@@ -172,6 +172,10 @@
 		"value": "魔术师"
 	},
 	{
+		"key": "Joker",
+		"value": "弄臣"
+	},
+	{
 		"key": "Smoker",
 		"value": "吸烟者"
 	},
@@ -642,6 +646,18 @@
 	{
 		"key": "Puts humans (if enabled) and zombies into a vulnerable state by pulling them into its center",
 		"value": "默认情况下,白洞不会吸引人类,只会吸引感染者到白洞的中心."
+	},
+	{
+		"key": "The Magician can use hammer to kill the zombies.",
+		"value": "魔术师可以用锤子杀死僵尸"
+	},
+	{
+		"key": "He has also magic grenades that teleport and hide him.",
+		"value": "他还拥有魔法榴弹炮, 可以传送并隐藏他"
+	},
+	{
+		"key": "And he has a gun to shoot grenades.",
+		"value": "以及他拥有发射榴弹的手枪"
 	},
 	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
