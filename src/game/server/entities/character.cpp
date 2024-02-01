@@ -3422,7 +3422,7 @@ int CCharacter::GetHealthArmorSum()
 void CCharacter::Die(int Killer, int Weapon)
 {
 /* INFECTION MODIFICATION START ***************************************/
-	if(Killer != m_pPlayer->GetCID() && GetClass() == PLAYERCLASS_JOKER && m_JokerFlagPos != vec2(0.f, 0.f) && m_ReviveNum < g_Config.m_InfJokerReviveNum)
+	if(Killer != m_pPlayer->GetCID() && GetClass() == PLAYERCLASS_JOKER && m_FlagPut && m_ReviveNum < g_Config.m_InfJokerReviveNum)
 	{
 		if(!GameServer()->Collision()->CheckPoint(m_JokerFlagPos))
 		{
@@ -3439,6 +3439,9 @@ void CCharacter::Die(int Killer, int Weapon)
 			m_Core.m_IsPassenger = false;
 			for(int i = 0; i < MAX_CLIENTS; i ++)
 			{
+				if(!GameWorld()->m_Core.m_apCharacters[i])
+					continue;
+
 				if(&m_Core == GameWorld()->m_Core.m_apCharacters[i]->m_Passenger)
 				{
 					GameWorld()->m_Core.m_apCharacters[i]->m_Passenger = nullptr;
