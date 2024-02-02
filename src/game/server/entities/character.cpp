@@ -3442,6 +3442,9 @@ void CCharacter::Die(int Killer, int Weapon)
 				if(!GameWorld()->m_Core.m_apCharacters[i])
 					continue;
 
+				if(!GameWorld()->m_Core.m_apCharacters[i]->m_Passenger)
+					continue;
+
 				if(&m_Core == GameWorld()->m_Core.m_apCharacters[i]->m_Passenger)
 				{
 					GameWorld()->m_Core.m_apCharacters[i]->m_Passenger = nullptr;
