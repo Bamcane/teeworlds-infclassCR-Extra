@@ -3462,6 +3462,7 @@ void CCharacter::Die(int Killer, int Weapon)
 			return;
 		}
 		m_JokerFlagPos = vec2(0.f, 0.f);
+		m_FlagPut = false;
 	}
 
 	if(GetClass() == PLAYERCLASS_UNDEAD && Killer != m_pPlayer->GetCID())
