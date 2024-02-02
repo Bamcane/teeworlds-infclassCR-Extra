@@ -3433,8 +3433,10 @@ void CCharacter::Die(int Killer, int Weapon)
 
 			m_Pos = m_JokerFlagPos;
 			m_Core.m_Pos = m_JokerFlagPos;
-			m_JokerFlagPos = vec2(0.f, 0.f);
 			m_Core.m_Vel = m_JokerDirection * 1.5f;
+			
+			m_JokerFlagPos = vec2(0.f, 0.f);
+			m_FlagPut = false;
 
 			m_Core.m_IsPassenger = false;
 			for(int i = 0; i < MAX_CLIENTS; i ++)
