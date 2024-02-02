@@ -3671,7 +3671,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 
 	if(Mode == TAKEDAMAGEMODE_INFECTION)
 	{
-	        if (!pKillerPlayer || !pKillerPlayer->IsZombie() || !IsHuman())
+	    if (!pKillerPlayer || !pKillerPlayer->IsZombie() || !IsHuman())
 		{
 		        // The infection is only possible if the killer is a zombie and the target is a human
 		        Mode = TAKEDAMAGEMODE_NOINFECTION;
@@ -3682,6 +3682,13 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	{
 		Dmg = 12;
 		// A zombie can't infect a hero
+		Mode = TAKEDAMAGEMODE_NOINFECTION;
+	}
+
+	if(GetClass() == PLAYERCLASS_JOKER  && Mode == TAKEDAMAGEMODE_INFECTION && m_FlagPut)
+	{
+		Dmg = 15;
+		// A zombie can't infect a joker
 		Mode = TAKEDAMAGEMODE_NOINFECTION;
 	}
 	
