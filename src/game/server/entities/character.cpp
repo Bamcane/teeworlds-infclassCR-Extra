@@ -1333,16 +1333,16 @@ void CCharacter::FireWeapon()
 		{
 			if(GetClass() == PLAYERCLASS_JOKER)
 			{
-				if(m_JokerFlagPos == vec2(0.f, 0.f))
-				{
-					m_JokerFlagPos = m_Pos;
-					m_JokerDirection = Direction;
-					m_FlagPut = true;
-				}else
+				if(m_FlagPut)
 				{
 					m_JokerFlagPos = vec2(0.f, 0.f);
 					m_JokerDirection = vec2(0.f, 0.f);
 					m_FlagPut = false;
+				}else
+				{
+					m_JokerFlagPos = m_Pos;
+					m_JokerDirection = Direction;
+					m_FlagPut = true;
 				}
 			}
 			else
