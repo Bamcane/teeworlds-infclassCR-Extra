@@ -1125,7 +1125,7 @@ void CCharacter::FireWeapon()
 									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_INFECTION);
 							}
 						}
-						else if(GetClass() == PLAYERCLASS_BIOLOGIST || GetClass() == PLAYERCLASS_MERCENARY ||  GetClass() == PLAYERCLASS_SCIOGIST)
+						else if(GetClass() == PLAYERCLASS_BIOLOGIST || GetClass() == PLAYERCLASS_JOKER || GetClass() == PLAYERCLASS_MERCENARY ||  GetClass() == PLAYERCLASS_SCIOGIST)
 						{
 							/* affects mercenary only if love bombs are disabled. */
 							if (pTarget->IsZombie())
