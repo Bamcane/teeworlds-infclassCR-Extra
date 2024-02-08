@@ -131,7 +131,7 @@ void CSlimeEntity::Snap(int SnappingClient)
 void CSlimeEntity::Explode()
 {
 	float t = (Server()->Tick()-m_StartTick-1.5)/(float)Server()->TickSpeed();
-	new CSlugSlime(GameWorld(), GetPos(t), m_Owner);
+	new CSlugSlime(GameWorld(), m_LastPos, m_Owner);
 
 	GameServer()->SendHitSound(m_Owner);
 	
