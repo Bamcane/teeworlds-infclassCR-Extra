@@ -47,6 +47,7 @@ void CPoliceShield::Tick()
 	}else
 	{
 		m_Direction = normalize(vec2(GameServer()->GetPlayerChar(m_Owner)->GetCore().m_Input.m_TargetX, GameServer()->GetPlayerChar(m_Owner)->GetCore().m_Input.m_TargetY));
+		m_OwnerChrCore = GameServer()->GetPlayerChar(m_Owner)->m_Core;
 	}
 
 	int Degres = (int)(atan2f(m_Direction.y, m_Direction.x) * 180.0f / pi + 360) % 360 + 45;
