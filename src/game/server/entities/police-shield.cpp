@@ -126,6 +126,6 @@ void CPoliceShield::Snap(int SnappingClient)
 		pObj->m_Y = (int)EndPos.y;
 		pObj->m_StartTick = Server()->Tick();
 
-        m_SnapIDsPos[i] = vec2(pObj->m_FromX, pObj->m_FromY);
+        m_SnapIDsPos[i] = StartPos;
 	}
 }
