@@ -22,11 +22,12 @@ CPoliceShield::CPoliceShield(CGameWorld *pGameWorld, int Owner)
 		m_IDs[i] = Server()->SnapNewID();
         m_SnapIDsPos[i] = vec2(0,0);
 	}
+	m_SnapIDsPos[NUM_IDS] = vec2(0,0);
 }
 
 CPoliceShield::~CPoliceShield()
 {
-	for(int i=0; i<NUM_IDS; i++)
+	for(int i = 0; i < NUM_IDS; i++)
 	{
 		Server()->SnapFreeID(m_IDs[i]);
 	}
@@ -48,6 +49,18 @@ void CPoliceShield::Tick()
 		m_Direction = normalize(vec2(GameServer()->GetPlayerChar(m_Owner)->GetCore().m_Input.m_TargetX, GameServer()->GetPlayerChar(m_Owner)->GetCore().m_Input.m_TargetY));
 	}
 
+	int Degres = (int)(atan2f(m_Direction.y, m_Direction.x) * 180.0f / pi + 360) % 360 + 45;
+
+	for(int i = 0; i < CPoliceShield::NUM_IDS;i++)
+	{
+		vec2 StartPos = m_Pos + (GetDir(Degres*pi/180) * m_Radius);
+		Degres -= 90 / NUM_IDS;
+		vec2 EndPos = m_Pos + (GetDir(Degres*pi/180) * m_Radius);
+
+        m_SnapIDsPos[i] = StartPos;
+        m_SnapIDsPos[i + 1] = StartPos;
+	}
+
 	if(m_ExplodeTick)
 		m_ExplodeTick--;
 
@@ -57,7 +70,7 @@ void CPoliceShield::Tick()
 	{
 		if(pChr->IsHuman()) continue;
 
-        for(int i=0;i < CPoliceShield::NUM_IDS;i++)
+        for(int i=0;i < CPoliceShield::NUM_IDS + 1;i++)
 	    {
 		    float Len = distance(pChr->m_Pos, m_SnapIDsPos[i]);
 
@@ -111,23 +124,17 @@ void CPoliceShield::Snap(int SnappingClient)
 	if(IsDontSnapEntity(SnappingClient))
 		return;
 
-	int Degres = (int)(atan2f(m_Direction.y, m_Direction.x) * 180.0f / pi + 360) % 360 + 45;
 
 	for(int i=0;i < CPoliceShield::NUM_IDS;i++)
 	{
-		vec2 StartPos = m_Pos + (GetDir(Degres*pi/180) * m_Radius);
-		Degres -= 90 / NUM_IDS;
-		vec2 EndPos = m_Pos + (GetDir(Degres*pi/180) * m_Radius);
 		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_IDs[i], sizeof(CNetObj_Laser)));
 		if(!pObj)
 			return;
 
-		pObj->m_FromX = (int)StartPos.x;
-		pObj->m_FromY = (int)StartPos.y;
-		pObj->m_X = (int)EndPos.x;
-		pObj->m_Y = (int)EndPos.y;
+		pObj->m_FromX = (int)m_SnapIDsPos[i].x;
+		pObj->m_FromY = (int)m_SnapIDsPos[i].y;
+		pObj->m_X = (int)m_SnapIDsPos[i + 1].x;
+		pObj->m_Y = (int)m_SnapIDsPos[i + 1].y;
 		pObj->m_StartTick = Server()->Tick();
-
-        m_SnapIDsPos[i] = StartPos;
 	}
 }

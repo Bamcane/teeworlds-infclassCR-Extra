@@ -19,7 +19,7 @@ public:
 	int m_Owner;
 	int m_ExplodeTick;
 	array<int> m_IDs;
-	vec2 m_SnapIDsPos[NUM_IDS];
+	vec2 m_SnapIDsPos[NUM_IDS + 1];
 
 	vec2 m_Direction;
 	
