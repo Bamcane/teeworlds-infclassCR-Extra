@@ -33,7 +33,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_ScoreRound = 0;
 	m_ScoreMode = PLAYERSCOREMODE_SCORE;
 	m_WinAsHuman = 0;
-	m_class = PLAYERCLASS_NONE;
+	m_Class = PLAYERCLASS_NONE;
 	m_InfectionTick = -1;
 	m_NumberKills = 0;
 	SetLanguage(Server()->GetClientLanguage(ClientID));
@@ -296,10 +296,10 @@ void CPlayer::Snap(int SnappingClient)
 			switch(GetClass())
 			{
 				case PLAYERCLASS_NONE:
-					str_copy(aClanName, Server()->Localization()->Localize(pPlayer->GetLanguage() ,"????"), sizeof(aClanName));
+					str_copy(aClanName, "????", sizeof(aClanName));
 					break;
 				default:
-					str_copy(aClanName, Server()->Localization()->Localize(pPlayer->GetLanguage() , GameServer()->GetClassName(m_class)), sizeof(aClanName));
+					str_copy(aClanName, GameServer()->GetClassName(m_Class), sizeof(aClanName));
 			}
 
 #ifdef CONF_SQL
@@ -325,7 +325,7 @@ void CPlayer::Snap(int SnappingClient)
 	IServer::CClientInfo info;
 	Server()->GetClientInfo(SnappingClient, &info);
 
-	switch(m_class)
+	switch(m_Class)
 	{
 		case PLAYERCLASS_ENGINEER:
 			m_TeeInfos.m_UseCustomColor = 0;
@@ -787,12 +787,12 @@ void CPlayer::TryRespawn()
 /* INFECTION MODIFICATION START ***************************************/
 int CPlayer::GetClass()
 {
-	return m_class;
+	return m_Class;
 }
 
 void CPlayer::SetClass(int newClass)
 {	
-	if(m_class == newClass)
+	if(m_Class == newClass)
 		return;
 	
 	if(newClass > START_HUMANCLASS && newClass < END_HUMANCLASS)
@@ -816,9 +816,9 @@ void CPlayer::SetClass(int newClass)
 	m_GhoulLevel = 0;
 	m_GhoulLevelTick = 0;
 	
-	m_class = newClass;
+	m_Class = newClass;
 	
-	if(m_class < END_HUMANCLASS)
+	if(m_Class < END_HUMANCLASS)
 		HookProtection(true);
 	else
 		HookProtection(true); // true = hook protection for zombies by default
@@ -839,7 +839,7 @@ int CPlayer::GetOldClass()
 {
 	bool hasOldClass = false;
 	for (int i = START_HUMANCLASS+1; i < END_HUMANCLASS; i++) {
-		if (m_classOld == i) {
+		if (m_ClassOld == i) {
 			hasOldClass = true;
 			break;
 		}
@@ -847,12 +847,12 @@ int CPlayer::GetOldClass()
 	if (!hasOldClass)
 		return PLAYERCLASS_MEDIC; // if old class was not set, it defaults to medic
 	else
-		return m_classOld;
+		return m_ClassOld;
 }
 
 void CPlayer::SetOldClass(int oldClass)
 {
-	m_classOld = oldClass;
+	m_ClassOld = oldClass;
 }
 
 void CPlayer::StartInfection(bool force)
@@ -873,12 +873,12 @@ void CPlayer::StartInfection(bool force)
 
 bool CPlayer::IsZombie() const
 {
-	return (m_class > END_HUMANCLASS);
+	return (m_Class > END_HUMANCLASS);
 }
 
 bool CPlayer::IsHuman() const
 {
-	return !(m_class > END_HUMANCLASS);
+	return !(m_Class > END_HUMANCLASS);
 }
 
 bool CPlayer::IsSpectator() const

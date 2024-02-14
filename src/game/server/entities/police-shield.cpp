@@ -3,7 +3,6 @@
 #include <game/generated/protocol.h>
 #include <game/server/gamecontext.h>
 #include "police-shield.h"
-#include "slime-entity.h"
 #include <engine/server/roundstatistics.h>
 #include <engine/shared/config.h>
 
@@ -47,7 +46,7 @@ void CPoliceShield::Tick()
 	}else
 	{
 		m_Direction = normalize(vec2(GameServer()->GetPlayerChar(m_Owner)->GetCore().m_Input.m_TargetX, GameServer()->GetPlayerChar(m_Owner)->GetCore().m_Input.m_TargetY));
-		m_OwnerChrCore = GameServer()->GetPlayerChar(m_Owner)->m_Core;
+		m_OwnerVel = GameServer()->GetPlayerChar(m_Owner)->GetCore().m_Vel;
 	}
 
 	int Degres = (int)(atan2f(m_Direction.y, m_Direction.x) * 180.0f / pi + 360) % 360 + 45;
@@ -58,8 +57,8 @@ void CPoliceShield::Tick()
 		Degres -= 90 / NUM_IDS;
 		vec2 EndPos = m_Pos + (GetDir(Degres*pi/180) * m_Radius);
 
-        m_SnapIDsPos[i] = StartPos;
-        m_SnapIDsPos[i + 1] = StartPos;
+        m_SnapIDsPos[i] = vec2( (int) StartPos.x, (int) StartPos.y);
+        m_SnapIDsPos[i + 1] = vec2( (int) EndPos.x, (int) EndPos.y);
 	}
 
 	if(m_ExplodeTick)
@@ -69,7 +68,8 @@ void CPoliceShield::Tick()
 
     for(CCharacter *pChr = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
 	{
-		if(pChr->IsHuman()) continue;
+		if(pChr->IsHuman()) 
+			continue;
 
         for(int i=0;i < CPoliceShield::NUM_IDS + 1;i++)
 	    {
@@ -78,44 +78,31 @@ void CPoliceShield::Tick()
 		    if(Len < pChr->m_ProximityRadius + 2)
 		    {
 				if(GameServer()->GetPlayerChar(m_Owner))
+				{
 					switch (GameServer()->GetPlayerChar(m_Owner)->m_ShieldExplode)
 					{
-						case 0:
-							if(abs(m_OwnerChrCore.m_Vel.x) > 4)
+						case 1:
+							if(!m_ExplodeTick)
 							{
-								pChr->SetVel(vec2(m_OwnerChrCore.m_Vel.x*1.5f, pChr->GetCore().m_Vel.y));
+								GameServer()->CreateExplosionDisk(m_SnapIDsPos[i], 32.0f, 48.0f, g_Config.m_InfPoliceShieldDamage, 32.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
+								m_ExplodeTick = g_Config.m_InfPoliceShieldExplodeTime;
+							}
+						case 0:
+							if(abs(m_OwnerVel.x) > 4)
+							{
+								pChr->SetVel(vec2(m_OwnerVel.x - pChr->GetCore().m_Vel.x, pChr->GetCore().m_Vel.y));
 							}
 
-							if(abs(m_OwnerChrCore.m_Vel.y) > 4)
+							if(abs(m_OwnerVel.y) > 4)
 							{
-								pChr->SetVel(vec2(pChr->GetCore().m_Vel.x, m_OwnerChrCore.m_Vel.y*1.5f));
-							}
-							break;
-						case 1:
-							if((abs(m_OwnerChrCore.m_Vel.x) > 4 || abs(m_OwnerChrCore.m_Vel.y) > 4) && !m_ExplodeTick)
-							{
-								GameServer()->CreateExplosionDisk(m_SnapIDsPos[i], 32.0f, 48.0f, g_Config.m_InfPoliceShieldDamage + (int)(max(m_OwnerChrCore.m_Vel.y, m_OwnerChrCore.m_Vel.x) - 4), 32.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
-								m_ExplodeTick = g_Config.m_InfPoliceShieldExplodeTime;
+								pChr->SetVel(vec2(pChr->GetCore().m_Vel.x, m_OwnerVel.y - pChr->GetCore().m_Vel.y));
 							}
 							break;
 					}
-				
+					if(m_ExplodeTick)
+						break;
+				}
 			}
-        }
-	}
-
-    for(CSlimeEntity *pSlime = (CSlimeEntity*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SLIME_ENTITY); pSlime; pSlime = (CSlimeEntity *)pSlime->TypeNext())
-	{
-        for(int i=0;i < CPoliceShield::NUM_IDS;i++)
-	    {
-		    float Len = distance(pSlime->m_ActualPos, m_SnapIDsPos[i]);
-
-		    if(Len < pSlime->m_ProximityRadius + 16)
-		    {
-			    GameServer()->m_World.DestroyEntity(pSlime);
-                GameServer()->CreatePlayerSpawn(m_SnapIDsPos[i]);
-                GameServer()->CreateSound(m_SnapIDsPos[i], SOUND_PLAYER_SPAWN);
-		    }
         }
 	}
 }
@@ -124,7 +111,6 @@ void CPoliceShield::Snap(int SnappingClient)
 {
 	if(IsDontSnapEntity(SnappingClient))
 		return;
-
 
 	for(int i=0;i < CPoliceShield::NUM_IDS;i++)
 	{

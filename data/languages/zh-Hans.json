@@ -153,7 +153,7 @@
 	},
 	{
 		"key": "Looper",
-		"value": "循环者"
+		"value": "环形师"
 	},
 	{
 		"key": "Catapult",
@@ -445,7 +445,7 @@
 	},
 	{
 		"key": "The Looper has a laser wall that slows down zombies and a fast shooting low-range-laser-rifle.",
-		"value": "循环者拥有激光墙，它可以降低僵尸的移动速度，以及一柄快速射击的低范围激光枪."
+		"value": "环形师拥有激光墙，它可以降低僵尸的移动速度，以及一柄快速射击的低范围激光枪."
 	},
 	{
 		"key": "He also has a grenades.",
@@ -813,7 +813,7 @@
 	},
 	{
 		"key": "Looper laser wall: {sec:RemainingTime}",
-		"value": "循环者激光墙: {sec:RemainingTime}"
+		"value": "环形师激光墙: {sec:RemainingTime}"
 	},
 	{
 		"key": "{int:NumBombs} bombs left",

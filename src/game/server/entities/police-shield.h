@@ -25,7 +25,7 @@ public:
 	
 private:
 	float m_Radius;
-	CCharacterCore m_OwnerChrCore;
+	vec2 m_OwnerVel;
 };
 
 #endif

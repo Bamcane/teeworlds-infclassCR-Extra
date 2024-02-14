@@ -1331,6 +1331,19 @@ void CCharacter::FireWeapon()
 
 		case WEAPON_SHOTGUN:
 		{
+			if(m_ReviveNum >= g_Config.m_InfJokerReviveNum)
+			{
+				vec2 To = m_Pos + Direction*32.0f;
+				if(To.y < -10.f * 32)
+				{
+					GameServer()->CreateSound(To, SOUND_HOOK_NOATTACH);
+					break;
+				}
+				m_Core.m_Vel += normalize(To - m_Pos) * 16.0f;
+				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+				break;
+			}
+
 			if(GetClass() == PLAYERCLASS_JOKER)
 			{
 				if(m_FlagPut)

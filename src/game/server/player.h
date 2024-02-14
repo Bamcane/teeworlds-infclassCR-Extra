@@ -122,8 +122,8 @@ private:
 
 /* INFECTION MODIFICATION START ***************************************/
 private:
-	int m_class;
-	int m_classOld;
+	int m_Class;
+	int m_ClassOld;
 	int m_ScoreMode;
 	int m_DefaultScoreMode;
 	char m_aLanguage[16];

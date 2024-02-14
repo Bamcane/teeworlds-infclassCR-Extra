@@ -6,6 +6,7 @@
 #include <engine/shared/config.h>
 #include <base/vmath.h>
 
+#include "police-shield.h"
 #include "growingexplosion.h"
 
 CSlimeEntity::CSlimeEntity(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir)
@@ -56,6 +57,25 @@ void CSlimeEntity::Tick()
 		return;
 	}
 	
+	if(random_prob(0.2f))
+	{
+		GameServer()->CreateDeath(m_ActualPos, m_Owner);
+	}
+
+    for(CPoliceShield *pShield = (CPoliceShield*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_POLICE_SHIELD); pShield; pShield = (CPoliceShield *)pShield->TypeNext())
+	{
+        for(int i = 1; i < CPoliceShield::NUM_IDS;i++)
+	    {
+		    float Len = distance(m_ActualPos, pShield->m_SnapIDsPos[i]);
+
+		    if(Len < m_ProximityRadius + 16)
+		    {
+			    GameServer()->m_World.DestroyEntity(this);
+				GameServer()->CreateExplosion(m_ActualPos, pShield->m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
+                GameServer()->CreateSound(m_ActualPos, SOUND_GRENADE_EXPLODE);
+			}
+        }
+	}
 	
 	int Collide = GameServer()->Collision()->IntersectLine(PrevPos, CurPos, NULL, &m_LastPos);
 	if(Collide)
@@ -108,24 +128,6 @@ void CSlimeEntity::Collision()
 	m_StartTick = Server()->Tick();
 	
 	m_ActualDir = normalize(m_Direction);
-}
-
-void CSlimeEntity::Snap(int SnappingClient)
-{
-	
-	if(IsDontSnapEntity(SnappingClient, m_ActualPos))
-		return;
-	
-	CNetObj_Pickup *pObj = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_ID, sizeof(CNetObj_Pickup)));
-    if(pObj)
-	{
-		float t = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
-		vec2 Pos(GetPos(t));
-		pObj->m_Type = POWERUP_HEALTH;
-		pObj->m_Subtype = 0;
-		pObj->m_X = Pos.x;
-		pObj->m_Y = Pos.y;
-	}
 }
 	
 void CSlimeEntity::Explode()

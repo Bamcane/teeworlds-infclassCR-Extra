@@ -131,7 +131,7 @@ MACRO_CONFIG_INT(InfElasticGrenadeCheckNum, inf_elastic_grenade_check_num, 3, 0,
 
 MACRO_CONFIG_INT(InfPoliceShieldRadius, inf_police_shield_Radius, 100, 0, 0, CFGFLAG_SERVER, "Police shield radius")
 MACRO_CONFIG_INT(InfPoliceShieldExplodeTime, inf_police_shield_explode_time, 4, 0, 0, CFGFLAG_SERVER, "Police shield explode time")
-MACRO_CONFIG_INT(InfPoliceShieldDamage, inf_police_shield_damage, 8, 0, 0, CFGFLAG_SERVER, "Police shield damage")
+MACRO_CONFIG_INT(InfPoliceShieldDamage, inf_police_shield_damage, 5, 0, 0, CFGFLAG_SERVER, "Police shield damage")
 
 MACRO_CONFIG_INT(InfAntiAirMineRadius, inf_anti_airmine_radius, 64, 0, 1024, CFGFLAG_SERVER, "Radius of anti-airmines")
 MACRO_CONFIG_INT(InfAntiAirMineSpeed, inf_anti_airmine_speed, 40, 0, 180, CFGFLAG_SERVER, "Rotation speed of anti-airmines")
