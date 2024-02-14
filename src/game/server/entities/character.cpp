@@ -1339,7 +1339,8 @@ void CCharacter::FireWeapon()
 					GameServer()->CreateSound(To, SOUND_HOOK_NOATTACH);
 					break;
 				}
-				m_Core.m_Vel += normalize(To - m_Pos) * 16.0f;
+				m_Core.m_Vel += normalize(To - m_Pos);
+				m_Core.m_Vel = normalize(m_Core.m_Vel) * 32.0f;
 				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 				break;
 			}
