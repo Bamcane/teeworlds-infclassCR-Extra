@@ -116,14 +116,13 @@ private:
 		int m_Ammo;
 		int m_Ammocost;
 		bool m_Got;
-
+		int m_ReloadTimer;
 	} m_aWeapons[NUM_WEAPONS];
 
 	int m_ActiveWeapon;
 	int m_LastWeapon;
 	int m_QueuedWeapon;
 
-	int m_ReloadTimer;
 	int m_AttackTick;
 
 	bool m_NeedFullHeal;

@@ -47,6 +47,7 @@
 #include "laser-teleport.h"
 #include "police-shield.h"
 #include "anti-airmine.h"
+#include "doctor-grenade.h"
 
 //input count
 struct CInputCount
@@ -433,7 +434,7 @@ void CCharacter::HandleNinja()
 void CCharacter::DoWeaponSwitch()
 {
 /* INFECTION MODIFICATION START ***************************************/
-	if(m_ReloadTimer != 0 || m_QueuedWeapon == -1)
+	if(m_QueuedWeapon == -1)
 		return;
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -646,7 +647,7 @@ void CCharacter::FireWeapon()
 		return;
 /* INFECTION MODIFICATION END *****************************************/
 	
-	if(m_ReloadTimer != 0)
+	if(m_aWeapons[m_ActiveWeapon].m_ReloadTimer != 0)
 		return;
 
 /* INFECTION MODIFICATION START ***************************************/
@@ -685,7 +686,7 @@ void CCharacter::FireWeapon()
 										  && (GetInfWeaponID(m_ActiveWeapon) != INFWEAPON_MEDIC_GRENADE))
 	{
 		// 125ms is a magical limit of how fast a human can click
-		m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
+		m_aWeapons[m_ActiveWeapon].m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
 		if(m_LastNoAmmoSound+Server()->TickSpeed() <= Server()->Tick())
 		{
 			GameServer()->CreateSound(m_Pos, SOUND_WEAPON_NOAMMO);
@@ -696,7 +697,7 @@ void CCharacter::FireWeapon()
 	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_BIOLOGIST_RIFLE && m_aWeapons[m_ActiveWeapon].m_Ammo < 10)
 	{
 		// 125ms is a magical limit of how fast a human can click
-		m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
+		m_aWeapons[m_ActiveWeapon].m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
 		if(m_LastNoAmmoSound+Server()->TickSpeed() <= Server()->Tick())
 		{
 			GameServer()->CreateSound(m_Pos, SOUND_WEAPON_NOAMMO);
@@ -708,7 +709,7 @@ void CCharacter::FireWeapon()
 	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_CATAPULT_RIFLE && m_aWeapons[m_ActiveWeapon].m_Ammo < 10)
 	{
 		// 125ms is a magical limit of how fast a human can click
-		m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
+		m_aWeapons[m_ActiveWeapon].m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
 		if(m_LastNoAmmoSound+Server()->TickSpeed() <= Server()->Tick())
 		{
 			GameServer()->CreateSound(m_Pos, SOUND_WEAPON_NOAMMO);
@@ -736,7 +737,7 @@ void CCharacter::FireWeapon()
 	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_POLICE_RIFLE && m_aWeapons[m_ActiveWeapon].m_Ammo < 5)
 	{
 		// 125ms is a magical limit of how fast a human can click
-		m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
+		m_aWeapons[m_ActiveWeapon].m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
 		if(m_LastNoAmmoSound+Server()->TickSpeed() <= Server()->Tick())
 		{
 			GameServer()->CreateSound(m_Pos, SOUND_WEAPON_NOAMMO);
@@ -889,7 +890,7 @@ void CCharacter::FireWeapon()
 					GameServer()->CreateSound(m_Pos, SOUND_PICKUP_ARMOR);
 				}
 				
-				m_ReloadTimer = Server()->TickSpeed()/4;
+				m_aWeapons[m_ActiveWeapon].m_ReloadTimer = Server()->TickSpeed()/4;
 			}
 			else if(GetClass() == PLAYERCLASS_SCIENTIST)
 			{
@@ -937,7 +938,7 @@ void CCharacter::FireWeapon()
 					
 					new CScientistMine(GameWorld(), ProjStartPos, m_pPlayer->GetCID());
 					
-					m_ReloadTimer = Server()->TickSpeed()/2;
+					m_aWeapons[m_ActiveWeapon].m_ReloadTimer = Server()->TickSpeed()/2;
 				}
 			}
 			else if(GetClass() == PLAYERCLASS_SCIOGIST && !GameServer()->m_FunRound)
@@ -1232,7 +1233,7 @@ void CCharacter::FireWeapon()
 				// if we Hit anything, we have to wait for the reload
 				if(Hits && GetClass() != PLAYERCLASS_SLIME)
 				{
-					m_ReloadTimer = Server()->TickSpeed()/3;
+					m_aWeapons[m_ActiveWeapon].m_ReloadTimer = Server()->TickSpeed()/3;
 				}
 				else if(GetClass() == PLAYERCLASS_SLUG)
 				{
@@ -1431,7 +1432,7 @@ void CCharacter::FireWeapon()
 					
 					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
 					
-					m_ReloadTimer = Server()->TickSpeed()/4;
+					m_aWeapons[m_ActiveWeapon].m_ReloadTimer = Server()->TickSpeed()/4;
 				}
 			}
 			else if(GetClass() == PLAYERCLASS_MEDIC)
@@ -1458,7 +1459,7 @@ void CCharacter::FireWeapon()
 
 					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
 					
-					m_ReloadTimer = Server()->TickSpeed()/4;
+					m_aWeapons[m_ActiveWeapon].m_ReloadTimer = Server()->TickSpeed()/4;
 				}
 				else
 				{
@@ -1579,6 +1580,11 @@ void CCharacter::FireWeapon()
 				
 				GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
 			}
+			else if(GetClass() == PLAYERCLASS_DOCTOR)
+			{
+				new CDoctorGrenade(GameWorld(), m_pPlayer->GetCID(), ProjStartPos, Direction);
+				GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
+			}
 			else
 			{
 				if(m_HasStunGrenade) 
@@ -1686,6 +1692,11 @@ void CCharacter::FireWeapon()
 					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.7f, m_pPlayer->GetCID(), Damage);
 					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 				}
+				else if (GetClass() == PLAYERCLASS_DOCTOR) {
+					Damage = 10;
+					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.7f, m_pPlayer->GetCID(), Damage);
+					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+				}
 				else
 				{
 					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);
@@ -1702,9 +1713,11 @@ void CCharacter::FireWeapon()
 	if(m_aWeapons[m_ActiveWeapon].m_Ammo > 0) // -1 == unlimited
 		m_aWeapons[m_ActiveWeapon].m_Ammo--;
 
-	if(!m_ReloadTimer)
+	if(!m_aWeapons[m_ActiveWeapon].m_ReloadTimer)
 	{
-		m_ReloadTimer = Server()->GetFireDelay(GetInfWeaponID(m_ActiveWeapon)) * Server()->TickSpeed() / 1000;
+		// a = b * 50 / 1000
+		// a/50*1000 = b
+		m_aWeapons[m_ActiveWeapon].m_ReloadTimer = Server()->GetFireDelay(GetInfWeaponID(m_ActiveWeapon)) * Server()->TickSpeed() / 1000;
 	}
 
 }
@@ -1871,11 +1884,15 @@ void CCharacter::HandleWeapons()
 
 
 	// check reload timer
-	if(m_ReloadTimer)
+	for (int i = 0; i < NUM_WEAPONS; i++)
 	{
-		m_ReloadTimer--;
-		return;
+		if(m_aWeapons[i].m_ReloadTimer)
+			m_aWeapons[i].m_ReloadTimer--;
 	}
+
+	if(m_aWeapons[m_ActiveWeapon].m_ReloadTimer)
+		m_aWeapons[m_ActiveWeapon].m_ReloadTimer--;
+
 	// fire Weapon, if wanted
 	FireWeapon();
 
@@ -1900,7 +1917,7 @@ void CCharacter::HandleWeapons()
 		
 		if(AmmoRegenTime)
 		{
-			if(m_ReloadTimer <= 0)
+			if(m_aWeapons[m_ActiveWeapon].m_ReloadTimer <= 0)
 			{
 				if (m_aWeapons[i].m_AmmoRegenStart < 0)
 					m_aWeapons[i].m_AmmoRegenStart = Server()->Tick();
@@ -2737,6 +2754,13 @@ void CCharacter::Tick()
 							Broadcast = true;
 						}
 						break;
+					case CMapConverter::MENUCLASS_DOCTOR:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_DOCTOR))
+						{
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Doctor"), NULL);
+							Broadcast = true;
+						}
+						break;
 				}
 			}
 			
@@ -2804,6 +2828,9 @@ void CCharacter::Tick()
 						break;
 					case CMapConverter::MENUCLASS_JOKER:
 						NewClass = PLAYERCLASS_JOKER;
+						break;
+					case CMapConverter::MENUCLASS_DOCTOR:
+						NewClass = PLAYERCLASS_DOCTOR;
 						break;
 				}
 				
@@ -3705,6 +3732,12 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	{
 		Dmg = 15;
 		// A zombie can't infect a joker
+		Mode = TAKEDAMAGEMODE_NOINFECTION;
+	}
+
+	if(GetClass() == PLAYERCLASS_DOCTOR  && Mode == TAKEDAMAGEMODE_INFECTION)
+	{
+		Dmg = 10;
 		Mode = TAKEDAMAGEMODE_NOINFECTION;
 	}
 	
@@ -4615,6 +4648,25 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_JOKER] = true;
 			}
 			break;
+		case PLAYERCLASS_DOCTOR:
+			RemoveAllGun();
+			m_pPlayer->m_InfectionTick = -1;
+			m_Health = 20;
+			m_Armor = 10;		
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_SHOTGUN, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_DOCTOR);
+			if(!m_pPlayer->IsKnownClass(PLAYERCLASS_DOCTOR))
+			{
+				m_pPlayer->m_knownClass[PLAYERCLASS_DOCTOR] = true;
+			}
+			break;
 		case PLAYERCLASS_NONE:
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
@@ -5138,6 +5190,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_REVIVER_HAMMER;
 			case PLAYERCLASS_SLIME://infect class
 				return INFWEAPON_SLIME_HAMMER;
+			case PLAYERCLASS_DOCTOR:
+				return INFWEAPON_DOCTOR_HAMMER;
 			default:
 				return INFWEAPON_HAMMER;
 		}
@@ -5179,6 +5233,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_MAGICIAN_SHOTGUN;
 			case PLAYERCLASS_JOKER:
 				return INFWEAPON_JOKER_SHOTGUN;
+			case PLAYERCLASS_DOCTOR:
+				return INFWEAPON_DOCTOR_SHOTGUN;
 			default:
 				return INFWEAPON_SHOTGUN;
 		}
@@ -5211,6 +5267,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_MAGICIAN_GRENADE;
 			case PLAYERCLASS_JOKER:
 				return INFWEAPON_JOKER_GRENADE;
+			case PLAYERCLASS_DOCTOR:
+				return INFWEAPON_DOCTOR_GRENADE;
 			default:
 				return INFWEAPON_GRENADE;
 		}
@@ -5243,6 +5301,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_POLICE_RIFLE;
 			case PLAYERCLASS_REVIVER:
 				return INFWEAPON_REVIVER_RIFLE;
+			case PLAYERCLASS_DOCTOR:
+				return INFWEAPON_DOCTOR_RIFLE;
 			default:
 				return INFWEAPON_RIFLE;
 		}

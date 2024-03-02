@@ -187,6 +187,7 @@ const char *CGameContext::GetClassName(int Class)
 		case PLAYERCLASS_REVIVER: return ("Reviver");break;
 		case PLAYERCLASS_MAGICIAN: return ("Magician");break;
 		case PLAYERCLASS_JOKER: return ("Joker");break;
+		case PLAYERCLASS_DOCTOR: return ("Doctor");break;
 		//Zombies
 		case PLAYERCLASS_SMOKER: return ("Smoker");break;
 		case PLAYERCLASS_BOOMER: return ("Boomer");break;
@@ -2883,6 +2884,7 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "ninja") == 0) pPlayer->SetClass(PLAYERCLASS_NINJA);
 	else if(str_comp(pClassName, "mercenary") == 0) pPlayer->SetClass(PLAYERCLASS_MERCENARY);
 	else if(str_comp(pClassName, "sniper") == 0) pPlayer->SetClass(PLAYERCLASS_SNIPER);
+	else if(str_comp(pClassName, "doctor") == 0) pPlayer->SetClass(PLAYERCLASS_DOCTOR);
 	else if(str_comp(pClassName, "smoker") == 0) pPlayer->SetClass(PLAYERCLASS_SMOKER);
 	else if(str_comp(pClassName, "hunter") == 0) pPlayer->SetClass(PLAYERCLASS_HUNTER);
 	else if(str_comp(pClassName, "bat") == 0) pPlayer->SetClass(PLAYERCLASS_BAT);
@@ -3067,6 +3069,11 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 			{
 				CheckClass = PLAYERCLASS_JOKER;
 				str_copy(aChatTitle, "joker", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "!doctor") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_DOCTOR;
+				str_copy(aChatTitle, "doctor", sizeof(aChatTitle));
 			}
 			else if(str_comp(aNameFound, "!looper") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{

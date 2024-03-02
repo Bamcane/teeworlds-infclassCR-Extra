@@ -421,6 +421,10 @@ void CPlayer::Snap(int SnappingClient)
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "pinky", sizeof(m_TeeInfos.m_SkinName));
 			break;
+		case PLAYERCLASS_DOCTOR:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "nanas", sizeof(m_TeeInfos.m_SkinName));
+			break;
 		case PLAYERCLASS_SMOKER:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "cammostripes", sizeof(m_TeeInfos.m_SkinName));

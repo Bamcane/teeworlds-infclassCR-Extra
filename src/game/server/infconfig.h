@@ -33,6 +33,7 @@ MACRO_CONFIG_INT(InfMedicLimit, inf_medic_limit, 20, 0, 64, CFGFLAG_SERVER, "Max
 MACRO_CONFIG_INT(InfHeroLimit, inf_hero_limit, 1, 0, 64, CFGFLAG_SERVER, "Maximum number of heros in game")
 MACRO_CONFIG_INT(InfSupportLimit, inf_support_limit, 40, 0, 64, CFGFLAG_SERVER, "Maximum number of supports in game")
 MACRO_CONFIG_INT(InfReviverLimit, inf_reviver_limit, 1, 0, 4, CFGFLAG_SERVER, "Maximum number of revivers in game")
+MACRO_CONFIG_INT(InfDoctorLimit, inf_doctor_limit, 1, 0, 4, CFGFLAG_SERVER, "Maximum number of doctors in game")
 
 MACRO_CONFIG_INT(InfSoldierBombs, inf_soldier_bombs, 3, 1, 16, CFGFLAG_SERVER, "Number of bombs for the soldier")
 MACRO_CONFIG_INT(InfMercBombs, inf_merc_bombs, 15, 1, 100, CFGFLAG_SERVER, "Number of poison grenades for the mercenary")
@@ -104,6 +105,7 @@ MACRO_CONFIG_INT(InfEnableHero, inf_enable_hero, 1, 0, 1, CFGFLAG_SERVER, "Makes
 MACRO_CONFIG_INT(InfEnablePolice, inf_enable_police, 1, 0, 1, CFGFLAG_SERVER, "Makes the police class available")
 MACRO_CONFIG_INT(InfEnableMagician, inf_enable_magician, 1, 0, 1, CFGFLAG_SERVER, "Makes the magician class available")
 MACRO_CONFIG_INT(InfEnableJoker, inf_enable_joker, 1, 0, 1, CFGFLAG_SERVER, "Makes the joker class available")
+MACRO_CONFIG_INT(InfEnableDoctor, inf_enable_doctor, 1, 0, 1, CFGFLAG_SERVER, "Makes the doctor class available")
 
 MACRO_CONFIG_INT(InfMinEngineerPlayer, inf_min_engineer_player, 8, 0, 32, CFGFLAG_SERVER, "Min engineer need player num")
 
@@ -145,6 +147,8 @@ MACRO_CONFIG_INT(InfPlasmaPlusRange, inf_plasma_plus_range, 128, 0, 2000, CFGFLA
 MACRO_CONFIG_INT(InfPlasmaPlusLifeSpan, inf_plasma_plus_life_span, 3, 0, 100, CFGFLAG_SERVER, "plasma plus life span")
 MACRO_CONFIG_INT(InfPlasmaPlusDamage, inf_plasma_plus_damage, 5, 0, 20, CFGFLAG_SERVER, "Damage of plasma plus")
 MACRO_CONFIG_INT(InfPlasmaPlusSpeed, inf_plasma_plus_speed, 16, 0, 20, CFGFLAG_SERVER, "Speed of plasma plus")
+
+MACRO_CONFIG_INT(InfDoctorGrenadeLifeSpan, inf_doctor_grenade_life_span, 2, 0, 100, CFGFLAG_SERVER, "Doctor grenade life span")
 
 //Looper class config
 MACRO_CONFIG_INT(InfSlowMotionWallDuration, inf_slow_motion_wall_duration, 30, 0, 1024, CFGFLAG_SERVER, "How long looper wall slow motion effect will slow down zombies (in centiSec)")
