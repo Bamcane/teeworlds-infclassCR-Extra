@@ -11,7 +11,7 @@ inline void tl_assert(bool statement)
 }
 
 template<class T>
-inline void swap(T &a, T &b)
+inline void swap_b(T &a, T &b)
 {
 	T c = b;
 	b = a;

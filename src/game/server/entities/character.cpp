@@ -1714,11 +1714,7 @@ void CCharacter::FireWeapon()
 		m_aWeapons[m_ActiveWeapon].m_Ammo--;
 
 	if(!m_aWeapons[m_ActiveWeapon].m_ReloadTimer)
-	{
-		// a = b * 50 / 1000
-		// a/50*1000 = b
 		m_aWeapons[m_ActiveWeapon].m_ReloadTimer = Server()->GetFireDelay(GetInfWeaponID(m_ActiveWeapon)) * Server()->TickSpeed() / 1000;
-	}
 
 }
 
