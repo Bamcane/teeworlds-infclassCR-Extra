@@ -13,7 +13,6 @@
 #include <game/gamecore.h>
 #include "gamemodes/mod.h"
 #include <algorithm>
-#include "pathfinder/AStarPathfinding.h"
 
 #ifdef CONF_SQL
 #include <engine/server/crypt.h>
@@ -4368,8 +4367,6 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 		}
 	}
 #endif
-
-	new CAStarPathfinding(Collision());
 }
 
 void CGameContext::OnStartRound()

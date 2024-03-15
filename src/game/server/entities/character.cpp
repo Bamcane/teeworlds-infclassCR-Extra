@@ -48,6 +48,7 @@
 #include "police-shield.h"
 #include "anti-airmine.h"
 #include "doctor-grenade.h"
+#include "doctor-funnel.h"
 
 //input count
 struct CInputCount
@@ -142,6 +143,8 @@ m_pConsole(pConsole)
 	m_BroadcastHealBoomReady= -100;
 	m_pHeroFlag = nullptr;
 	m_ResetKillsTime = 0;
+	m_FunnelState = -1;
+	m_PowerBattery = 0;;
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -1024,6 +1027,22 @@ void CCharacter::FireWeapon()
 							SetWeapon(m_LastWeapon);
 						}
 					}
+				}
+			}
+			else if(GetClass() == PLAYERCLASS_DOCTOR)
+			{
+				if(m_FunnelState == -1)
+				{
+					new CDoctorFunnel(GameWorld(), m_Pos, GetPlayer()->GetCID());
+					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+					m_FunnelState = CDoctorFunnel::STATE_FOLLOW;
+					m_PowerBattery = g_Config.m_InfDoctorMaxPowerBattery;
+				}
+				else
+				{
+					m_FunnelState++;
+					if(m_FunnelState >= CDoctorFunnel::NUM_STATE)
+						m_FunnelState = CDoctorFunnel::STATE_FOLLOW;
 				}
 			}
 			else

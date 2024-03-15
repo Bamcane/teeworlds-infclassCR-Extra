@@ -246,7 +246,9 @@ public:
 	bool m_VoodooAboutToDie;
 	int m_TurretCount;
 	int m_ResetKillsTime;
-	
+	int m_FunnelState;
+	int m_PowerBattery;
+
 	vec2 m_JokerFlagPos;
 	vec2 m_JokerDirection;
 	bool m_FlagPut;

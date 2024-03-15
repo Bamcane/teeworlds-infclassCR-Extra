@@ -149,6 +149,8 @@ MACRO_CONFIG_INT(InfPlasmaPlusDamage, inf_plasma_plus_damage, 5, 0, 20, CFGFLAG_
 MACRO_CONFIG_INT(InfPlasmaPlusSpeed, inf_plasma_plus_speed, 16, 0, 20, CFGFLAG_SERVER, "Speed of plasma plus")
 
 MACRO_CONFIG_INT(InfDoctorGrenadeLifeSpan, inf_doctor_grenade_life_span, 2, 0, 100, CFGFLAG_SERVER, "Doctor grenade life span")
+MACRO_CONFIG_INT(InfDoctorFunnelDamage, inf_doctor_funnel_damage, 1, -100, 100, CFGFLAG_SERVER, "Damage of funnel laser")
+MACRO_CONFIG_INT(InfDoctorMaxPowerBattery, inf_doctor_max_power_battery, 1500, -1, 10000, CFGFLAG_SERVER, "Max power battery of funnel(50 = 1s)")
 
 //Looper class config
 MACRO_CONFIG_INT(InfSlowMotionWallDuration, inf_slow_motion_wall_duration, 30, 0, 1024, CFGFLAG_SERVER, "How long looper wall slow motion effect will slow down zombies (in centiSec)")
