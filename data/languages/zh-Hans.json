@@ -49,7 +49,7 @@
 	},
 	{
 		"key": "{int:NumHumans} humans won the round",
-		"other": "{int:NumHumans} 名人类赢了这轮",
+		"other": "{int:NumHumans} 名人类赢了这轮"
 	},
 	{
 		"key": "You have survived, +5 points",
@@ -369,7 +369,7 @@
 	},
 	{
 		"key": "Mines are limited to {int:NumMines} per player at the same time.",
-		"other": "同一时间内同一玩家最多只能布置 {int:NumMines}个地雷",
+		"other": "同一时间内同一玩家最多只能布置 {int:NumMines}个地雷"
 	},
 	{
 		"key": "He has also grenades that teleport him.",
@@ -489,7 +489,7 @@
 	},
 	{
 		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
-		"other": "他的锤子被替换为忍者刀, 允许他在碰到地面前刀跃{int:NinjaJump}次",
+		"other": "他的锤子被替换为忍者刀, 允许他在碰到地面前刀跃{int:NinjaJump}次"
 	},
 	{
 		"key": "The Mercenary can fly using his machine gun.",
@@ -501,7 +501,7 @@
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points during two seconds.",
-		"other": "他的榴弹炮也可以发射毒气炸弹,在两秒内每秒对感染者造成{int:NumDamagePoints}点伤害",
+		"other": "他的榴弹炮也可以发射毒气炸弹,在两秒内每秒对感染者造成{int:NumDamagePoints}点伤害"
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
@@ -817,11 +817,11 @@
 	},
 	{
 		"key": "{int:NumBombs} bombs left",
-		"other": "炸弹剩余 {int:NumBombs} 个",
+		"other": "炸弹剩余 {int:NumBombs} 个"
 	},
 	{
 		"key": "{int:NumMines} mines are active",
-		"other": "当前激活地雷 {int:NumMines} 个",
+		"other": "当前激活地雷 {int:NumMines} 个"
 	},
 	{
 		"key": "Mine activated",
@@ -1022,5 +1022,13 @@
 	{
 		"key": "infect leaver",
 		"value": "作为感染离开"
+	},
+	{
+		"key": "Doctor",
+		"value": "博士"
+	},
+	{
+		"key": "Remaining power of Funnel: {int:power}/{int:max}",
+		"value": "浮游炮剩余电量：{int:power}/{int:max}"
 	}
 ]}
