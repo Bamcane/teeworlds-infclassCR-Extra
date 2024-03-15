@@ -9,7 +9,6 @@ public:
     enum
     {
         NUM_LASER = 9,
-        NUM_LASER_C = 16,
 
         STATE_FOLLOW = 0,
         STATE_FIND,
@@ -33,7 +32,6 @@ private:
     int m_Owner;
     int m_Angle;
     int m_LaserIDs[NUM_LASER];
-    int m_aLaserIDs[NUM_LASER_C];
     bool m_LowPower;
     bool m_LockTarget;
     int m_TargetCID;

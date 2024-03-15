@@ -8,26 +8,19 @@
 #include "doctor-funnel.h"
 
 CDoctorFunnel::CDoctorFunnel(CGameWorld *pGameWorld, vec2 Pos, int Owner)
-    : CEntity(pGameWorld, CGameWorld::ENTTYPE_DOCTOR_FUNNEL)
+    : CEntity(pGameWorld, CGameWorld::ENTTYPE_DOCTOR_FUNNEL), m_Owner(Owner), m_LockTarget(false), m_TargetCID(-1)
 {
-    m_Pos = Pos;
-    m_Owner = Owner;
     for (int i = 0; i < NUM_LASER; i++)
-    {
         m_LaserIDs[i] = Server()->SnapNewID();
-    }
     m_ConnectID = Server()->SnapNewID();
-    m_LockTarget = false;
-    m_TargetCID = -1;
+
     GameWorld()->InsertEntity(this);
 }
 
 CDoctorFunnel::~CDoctorFunnel()
 {
     for (int i = 0; i < NUM_LASER; i++)
-    {
         Server()->SnapFreeID(m_LaserIDs[i]);
-    }
     Server()->SnapFreeID(m_ConnectID);
 }
 
@@ -41,8 +34,6 @@ vec2 CDoctorFunnel::GetTargetPos()
     if (!m_LockTarget)
     {
         std::vector<int> Targets;
-
-        // initiate infection vector when player is human and was no infected before
         CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
         while (Iter.Next())
         {
