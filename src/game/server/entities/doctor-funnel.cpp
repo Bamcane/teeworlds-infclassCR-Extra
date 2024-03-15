@@ -1,9 +1,10 @@
+// Copyright (c) ST-Chara 2024 - 2024
 #include <game/server/gamecontext.h>
 #include <engine/shared/config.h>
 #include <base/math.h>
 #include <base/vmath.h>
 #include <game/server/player.h>
-
+#include "laser.h"
 #include "doctor-funnel.h"
 
 CDoctorFunnel::CDoctorFunnel(CGameWorld *pGameWorld, vec2 Pos, int Owner)
@@ -70,20 +71,40 @@ void CDoctorFunnel::Tick()
     if (!GameServer()->GetPlayerChar(m_Owner) || GameServer()->GetPlayerChar(m_Owner)->IsZombie())
         return Reset();
 
-    int Power = GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery/50.f;
-    int Max = g_Config.m_InfDoctorMaxPowerBattery/50.f;
-    GameServer()->SendBroadcast_Localization(m_Owner, BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, 
-                _("Remaining power of Funnel: {int:power}/{int:max}"), 
-                "power", &Power, 
-                "max", &Max);
+    int Power = GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery / 50.f;
+    int Max = g_Config.m_InfDoctorMaxPowerBattery / 50.f;
+    GameServer()->SendBroadcast_Localization(m_Owner, BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+                                             _("Remaining power of Funnel: {int:power}/{int:max}"),
+                                             "power", &Power,
+                                             "max", &Max);
 
     switch (GameServer()->GetPlayerChar(m_Owner)->m_FunnelState)
     {
     case STATE_FOLLOW:
-        if(!m_LowPower)
+        if (!m_LowPower)
+        {
             m_TargetPos = vec2(GetOwnerPos().x, GetOwnerPos().y - 128.f);
+            for (CCharacter *pChr = (CCharacter *)GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
+            {
+                if (!pChr->IsZombie() ||
+                    (pChr->GetClass() == PLAYERCLASS_UNDEAD && pChr->IsFrozen()) ||
+                    (pChr->GetClass() == PLAYERCLASS_VOODOO && pChr->m_VoodooAboutToDie))
+                    continue;
+
+                float Len = distance(pChr->m_Pos, m_Pos);
+
+                if (Len < 300 && Server()->Tick() % 10 == 0)
+                {
+                    vec2 Direction = normalize(pChr->m_Pos - m_Pos);
+
+                    new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_Owner, g_Config.m_InfDoctorFunnelDamage);
+
+                    GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+                }
+            }
+        }
         m_Pos += (m_TargetPos - m_Pos) / 24.f;
-        if(GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery <= 0)
+        if (GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery <= 0)
         {
             GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery = 0;
             m_LowPower = true;
@@ -93,10 +114,10 @@ void CDoctorFunnel::Tick()
         break;
 
     case STATE_FIND:
-        if(!m_LowPower)
+        if (!m_LowPower)
             m_TargetPos = vec2(GetTargetPos().x, GetTargetPos().y);
         m_Pos += (m_TargetPos - m_Pos) / 24.f;
-        if(m_LowPower)
+        if (m_LowPower)
             break;
 
         if (!GameServer()->GetPlayerChar(m_TargetCID) && m_ChangeTargetNeed > 10)
@@ -108,7 +129,7 @@ void CDoctorFunnel::Tick()
         if (GameServer()->GetPlayerChar(m_TargetCID) && distance(m_TargetPos, m_Pos) < 150.f && Server()->Tick() % 10 == 0)
             GameServer()->GetPlayerChar(m_TargetCID)->TakeDamage(vec2(0, 0), g_Config.m_InfDoctorFunnelDamage, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
 
-        if(GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery <= 0)
+        if (GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery <= 0)
         {
             GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery = 0;
             m_LowPower = true;
@@ -120,10 +141,10 @@ void CDoctorFunnel::Tick()
     case STATE_STAY:
         m_Pos = vec2(GetOwnerPos().x, GetOwnerPos().y);
 
-        if(GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery < g_Config.m_InfDoctorMaxPowerBattery)
+        if (GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery < g_Config.m_InfDoctorMaxPowerBattery)
         {
             GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery++;
-            if(Server()->Tick()%5 == 0)
+            if (Server()->Tick() % 5 == 0)
                 GameServer()->CreateSound(GameServer()->GetPlayerChar(m_Owner)->m_Pos, SOUND_HOOK_NOATTACH);
         }
         m_LowPower = false;

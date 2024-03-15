@@ -1,3 +1,4 @@
+// Copyright (c) ST-Chara 2024 - 2024
 #pragma once
 
 #include <game/server/entity.h>
@@ -8,9 +9,11 @@ public:
     enum
     {
         NUM_LASER = 9,
+        NUM_LASER_C = 16,
 
         STATE_FOLLOW = 0,
         STATE_FIND,
+        STATE_TARGET,
         STATE_STAY,
         NUM_STATE,
     };
@@ -30,6 +33,7 @@ private:
     int m_Owner;
     int m_Angle;
     int m_LaserIDs[NUM_LASER];
+    int m_aLaserIDs[NUM_LASER_C];
     bool m_LowPower;
     bool m_LockTarget;
     int m_TargetCID;
