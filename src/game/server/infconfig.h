@@ -37,7 +37,7 @@ MACRO_CONFIG_INT(InfDoctorLimit1, inf_doctor_limit_1, 1, 0, 4, CFGFLAG_SERVER, "
 MACRO_CONFIG_INT(InfDoctorLimit2, inf_doctor_limit_2, 2, 0, 4, CFGFLAG_SERVER, "Maximum number of doctors in game")
 
 MACRO_CONFIG_INT(InfSoldierBombs, inf_soldier_bombs, 3, 1, 16, CFGFLAG_SERVER, "Number of bombs for the soldier")
-MACRO_CONFIG_INT(InfMercBombs, inf_merc_bombs, 15, 1, 100, CFGFLAG_SERVER, "Number of poison grenades for the mercenary")
+MACRO_CONFIG_INT(InfMercBombs, inf_merc_bombs, 100, 1, 100, CFGFLAG_SERVER, "Number of poison grenades for the mercenary")
 MACRO_CONFIG_INT(InfMercLove, inf_merc_love, 1, 0, 1, CFGFLAG_SERVER, "Enables love bombs for the mercenary (hammer)")
 MACRO_CONFIG_INT(InfBarrierLifeSpan, inf_barrier_lifespan, 30, 0, 100, CFGFLAG_SERVER, "Barrier lifespan")
 
