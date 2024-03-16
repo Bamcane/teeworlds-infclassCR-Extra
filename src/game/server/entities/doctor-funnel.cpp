@@ -191,7 +191,7 @@ void CDoctorFunnel::Tick()
 
 void CDoctorFunnel::Snap(int SnappingClient)
 {
-    if (IsDontSnapEntity(SnappingClient))
+    if (IsDontSnapEntity(SnappingClient) || !GameServer()->GetPlayerChar(m_Owner))
         return;
 
     {
