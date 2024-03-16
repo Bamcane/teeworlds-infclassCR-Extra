@@ -1046,5 +1046,89 @@
 	{
 		"key": "You used an emergency battery!",
 		"value": "你使用了应急电池！"
+	},
+	{
+		"key": "Doctor can use a hammer to summon a funnel.",
+		"value": "博士可以使用锤子召唤一个浮游炮"
+	},
+	{
+		"key": "And the Doctor can change it funnel's state with hammer.",
+		"value": "并使用锤子更改浮游炮的模式"
+	},
+	{
+		"key": "See /help funnel",
+		"value": "详情请看/help funnel"
+	},
+	{
+		"key": "The Doctor can fire shotgun to charge Funnel's battery by twice.",
+		"value": "博士可以通过散弹枪给浮游炮恢复两倍的电量"
+	},
+	{
+		"key": "The Doctor's grenade will explode with a delay of half a second",
+		"value": "博士的榴弹会延迟半秒爆炸"
+	},
+	{
+		"key": "And fly in a straight line.",
+		"value": "并沿直线飞行"
+	},
+	{
+		"key": "Doctor made by ST-Chara(Flower)",
+		"value": "博士由ST-Chara(别名Flower)制作"
+	},
+	{
+		"key": "Funnel",
+		"value": "浮游炮"
+	},
+	{
+		"key": "Funnel can be summoned by The Doctor.",
+		"value": "浮游炮可以被博士召唤"
+	},
+	{
+		"key": "And the Doctor can change its state with the hammer.",
+		"value": "并使用锤子更改浮游炮的模式"
+	},
+	{
+		"key": "State: Following",
+		"value": "模式：跟随"
+	},
+	{
+		"key": "In this state, Funnel will be following The Doctor's head.",
+		"value": "在这个模式里，浮游炮会跟随在博士的头上"
+	},
+	{
+		"key": "And shoot lasers at the surrounding zombies.",
+		"value": "并向周围的僵尸射激光"
+	},
+	{
+		"key": "State: Tracking",
+		"value": "模式：追踪"
+	},
+	{
+		"key": "In this state, Funnel will actively search for nearby zombies",
+		"value": "在这个模式里，浮游炮会主动寻找周围的僵尸"
+	},
+	{
+		"key": "And when approaching, connect zombies and cause damage.",
+		"value": "并且在接近后，用激光连接僵尸并造成伤害"
+	},
+	{
+		"key": "State: Charging",
+		"value": "模式：充电"
+	},
+	{
+		"key": "In this state, Funnel will remain on the owner and slowly restore power.",
+		"value": "在这个模式里，浮游炮会回到主人身上并缓慢恢复电量"
+	},
+	{
+		"key": "This state will not attack.",
+		"value": "这个模式下浮游炮不会攻击"
+	},
+	{
+		"key": "When the power returns to zero, Funnel will stop moving",
+		"value": "当电量归零，浮游炮将停止一切行动"
+	},
+	{
+		"key": "Funnel made by ST-Chara(Flower)",
+		"value": "浮游炮由ST-Chara(别名Flower)制作"
 	}
 ]}

@@ -3571,7 +3571,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("And he has a grenades that hinder infected from harming and make them slower."), NULL); 
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
-		else if(str_comp_nocase(pHelpPage, "Magician") == 0)
+		else if(str_comp_nocase(pHelpPage, "magician") == 0)
 		{
 			Buffer.append("~~ ");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Magician"), NULL); 
@@ -3685,6 +3685,60 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He has also a powerful rifle that deals 30 damage points in locked position, and 10–13 otherwise."), NULL);
 			
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
+		}
+		else if(str_comp_nocase(pHelpPage, "doctor") == 0)
+		{
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Doctor"), NULL); 
+			Buffer.append(" ~~\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Doctor can use a hammer to summon a funnel."), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("And the Doctor can change it funnel's state with hammer."), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("See /help funnel"), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Doctor can fire shotgun to charge Funnel's battery by twice."), NULL); 
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Doctor's grenade will explode with a delay of half a second"), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("And fly in a straight line."), NULL); 
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Doctor made by ST-Chara(Flower)"), NULL); 
+			
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
+		}
+		else if(str_comp_nocase(pHelpPage, "funnel") == 0)
+		{
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Funnel"), NULL); 
+			Buffer.append(" ~~\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Funnel can be summoned by The Doctor."), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("And the Doctor can change its state with the hammer."), NULL); 
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("State: Following"), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("In this state, Funnel will be following The Doctor's head."), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("And shoot lasers at the surrounding zombies."), NULL); 
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("State: Tracking"), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("In this state, Funnel will actively search for nearby zombies"), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("And when approaching, connect zombies and cause damage."), NULL); 
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("State: Charging"), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("In this state, Funnel will remain on the owner and slowly restore power."), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("This state will not attack."), NULL); 
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("When the power returns to zero, Funnel will stop moving"), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Funnel made by ST-Chara(Flower)"), NULL); 
+
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
 		else if(str_comp_nocase(pHelpPage, "smoker") == 0)
