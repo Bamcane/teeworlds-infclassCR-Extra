@@ -314,10 +314,10 @@ private:
 public:
 	virtual void OnSetAuthed(int ClientID,int Level);
 	
-	virtual void SendBroadcast(int To, const char *pText, int Priority, int LifeSpan);
-	virtual void SendBroadcast_Localization(int To, int Priority, int LifeSpan, const char* pText, ...);
-	virtual void SendBroadcast_Localization_P(int To, int Priority, int LifeSpan, int Number, const char* pText, ...);
-	virtual void SendBroadcast_ClassIntro(int To, int Class);
+	virtual void SendBroadcast(int LineBreak, int To, const char *pText, int Priority, int LifeSpan);
+	virtual void SendBroadcast_Localization(int LineBreak, int To, int Priority, int LifeSpan, const char* pText, ...);
+	virtual void SendBroadcast_Localization_P(int LineBreak, int To, int Priority, int LifeSpan, int Number, const char* pText, ...);
+	virtual void SendBroadcast_ClassIntro(int LineBreak, int To, int Class);
 	virtual void ClearBroadcast(int To, int Priority);
 	
 	virtual void SendChatTarget_Localization(int To, int Category, const char* pText, ...);

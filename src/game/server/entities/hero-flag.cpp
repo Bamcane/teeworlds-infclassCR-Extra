@@ -91,7 +91,7 @@ void CHeroFlag::GiveGift(CCharacter* pHero)
 		return;
 
 	// Find other players	
-	GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The Hero found the flag!"), NULL);
+	GameServer()->SendBroadcast_Localization(0, -1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The Hero found the flag!"), NULL);
 	GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 	GameServer()->FlagCollected();
 

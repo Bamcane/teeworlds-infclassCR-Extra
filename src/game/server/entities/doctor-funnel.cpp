@@ -40,7 +40,10 @@ vec2 CDoctorFunnel::GetTargetPos()
             if (!Iter.Player()->GetCharacter())
                 continue;
 
-            if (Iter.Player()->IsZombie())
+            if (!Iter.Player()->IsZombie())
+                continue;
+                
+            if(distance(Iter.Player()->GetCharacter()->m_Pos, GameServer()->GetPlayerChar(m_Owner)->m_Pos) < 2000)
                 Targets.push_back(Iter.ClientID());
         }
 
@@ -62,9 +65,12 @@ void CDoctorFunnel::Tick()
     if (!GameServer()->GetPlayerChar(m_Owner) || GameServer()->GetPlayerChar(m_Owner)->IsZombie())
         return Reset();
 
+    if(Server()->Tick()%50 == 0)
+        m_ChangeTargetNeed--;
+
     int Power = GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery / 50.f;
     int Max = g_Config.m_InfDoctorMaxPowerBattery / 50.f;
-    GameServer()->SendBroadcast_Localization(m_Owner, BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+    GameServer()->SendBroadcast_Localization(0, m_Owner, BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
                                              _("Remaining power of Funnel: {int:power}/{int:max}"),
                                              "power", &Power,
                                              "max", &Max);
@@ -111,7 +117,7 @@ void CDoctorFunnel::Tick()
         if (m_LowPower)
             break;
 
-        if (!GameServer()->GetPlayerChar(m_TargetCID) && m_ChangeTargetNeed > 10)
+        if ((!GameServer()->GetPlayerChar(m_TargetCID) && m_ChangeTargetNeed > 10) || (GameServer()->GetPlayerChar(m_TargetCID) && distance(GameServer()->GetPlayerChar(m_TargetCID)->m_Pos, GameServer()->GetPlayerChar(m_Owner)->m_Pos) > 2000))
         {
             m_LockTarget = false;
             m_ChangeTargetNeed = 0;

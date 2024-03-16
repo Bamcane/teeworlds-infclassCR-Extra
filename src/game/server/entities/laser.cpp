@@ -43,12 +43,12 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 
 		if (medic->GetHealthArmorSum() <= DAMAGE_ON_REVIVE) {
 			int HealthArmor = DAMAGE_ON_REVIVE + 1;
-			GameServer()->SendBroadcast_Localization(m_Owner, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("You need at least {int:HealthArmor} hp"),
+			GameServer()->SendBroadcast_Localization(0, m_Owner, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("You need at least {int:HealthArmor} hp"),
 					"HealthArmor", &HealthArmor);
 		}
 		else if (GameServer()->GetZombieCount() < MIN_ZOMBIES) {
 			int MinZombies = MIN_ZOMBIES;
-			GameServer()->SendBroadcast_Localization(m_Owner, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("Too few zombies (less than {int:MinZombies})"),
+			GameServer()->SendBroadcast_Localization(0, m_Owner, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("Too few zombies (less than {int:MinZombies})"),
 					"MinZombies", &MinZombies);
 		}
 		else {

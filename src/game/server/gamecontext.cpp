@@ -713,7 +713,7 @@ void CGameContext::AddBroadcast(int ClientID, const char* pText, int Priority, i
 	}
 }
 
-void CGameContext::SendBroadcast(int To, const char *pText, int Priority, int LifeSpan)
+void CGameContext::SendBroadcast(int LineBreak, int To, const char *pText, int Priority, int LifeSpan)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -726,19 +726,25 @@ void CGameContext::SendBroadcast(int To, const char *pText, int Priority, int Li
 		Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NOSEND, -1);
 	}
 
+	dynamic_string aBuf;
+	for (int i = 0; i < LineBreak; i++)
+		aBuf.append("\n");
+	aBuf.append(pText);
+	
+
 	for(int i = Start; i < End; i++)
 	{
 		if(m_apPlayers[i])
-			AddBroadcast(i, pText, Priority, LifeSpan);
+			AddBroadcast(i, aBuf.buffer(), Priority, LifeSpan);
 	}
 }
 
 void CGameContext::ClearBroadcast(int To, int Priority)
 {
-	SendBroadcast(To, "", Priority, BROADCAST_DURATION_REALTIME);
+	SendBroadcast(0, To, "", Priority, BROADCAST_DURATION_REALTIME);
 }
 
-void CGameContext::SendBroadcast_Localization(int To, int Priority, int LifeSpan, const char* pText, ...)
+void CGameContext::SendBroadcast_Localization(int LineBreak, int To, int Priority, int LifeSpan, const char* pText, ...)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -757,20 +763,25 @@ void CGameContext::SendBroadcast_Localization(int To, int Priority, int LifeSpan
 		Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NOSEND, -1);
 	}
 
+
 	for(int i = Start; i < End; i++)
 	{
 		if(m_apPlayers[i])
 		{
 			Buffer.clear();
 			Server()->Localization()->Format_VL(Buffer, m_apPlayers[i]->GetLanguage(), pText, VarArgs);
-			AddBroadcast(i, Buffer.buffer(), Priority, LifeSpan);
+			dynamic_string aBuf;
+			for (int i = 0; i < LineBreak; i++)
+				aBuf.append("\n");
+			aBuf.append(Buffer);
+			AddBroadcast(i, aBuf.buffer(), Priority, LifeSpan);
 		}
 	}
 	
 	va_end(VarArgs);
 }
 
-void CGameContext::SendBroadcast_Localization_P(int To, int Priority, int LifeSpan, int Number, const char* pText, ...)
+void CGameContext::SendBroadcast_Localization_P(int LineBreak, int To, int Priority, int LifeSpan, int Number, const char* pText, ...)
 {
 	int Start = (To < 0 ? 0 : To);
 	int End = (To < 0 ? MAX_CLIENTS : To+1);
@@ -785,23 +796,27 @@ void CGameContext::SendBroadcast_Localization_P(int To, int Priority, int LifeSp
 		if(m_apPlayers[i])
 		{
 			Server()->Localization()->Format_VLP(Buffer, m_apPlayers[i]->GetLanguage(), Number, pText, VarArgs);
-			AddBroadcast(i, Buffer.buffer(), Priority, LifeSpan);
+			dynamic_string aBuf;
+			for (int i = 0; i < LineBreak; i++)
+				aBuf.append("\n");
+			aBuf.append(Buffer);
+			AddBroadcast(i, aBuf.buffer(), Priority, LifeSpan);
 		}
 	}
 	
 	va_end(VarArgs);
 }
 
-void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
+void CGameContext::SendBroadcast_ClassIntro(int LineBreak, int ClientID, int Class)
 {
 	const char* pClassName = 0;
 
 	pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), GetClassName(Class));
 	
 	if(Class < END_HUMANCLASS)
-		SendBroadcast_Localization(ClientID, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("You are a human: {str:ClassName}"), "ClassName", pClassName, NULL);
+		SendBroadcast_Localization(LineBreak, ClientID, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("You are a human: {str:ClassName}"), "ClassName", pClassName, NULL);
 	else
-		SendBroadcast_Localization(ClientID, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("You are an infected: {str:ClassName}"), "ClassName", pClassName, NULL);
+		SendBroadcast_Localization(LineBreak, ClientID, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("You are an infected: {str:ClassName}"), "ClassName", pClassName, NULL);
 }
 
 /* INFECTION MODIFICATION END *****************************************/
@@ -1971,7 +1986,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				int TimeLeft = (pPlayer->m_TeamChangeTick - Server()->Tick())/Server()->TickSpeed();
 				char aBuf[128];
 				str_format(aBuf, sizeof(aBuf), "Time to wait before changing team: %02d:%02d", TimeLeft/60, TimeLeft%60);
-				SendBroadcast(ClientID, aBuf, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
+				SendBroadcast(0, ClientID, aBuf, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 				return;
 			}
 			
@@ -1980,7 +1995,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			{
 				if(GetZombieCount() <= 2)
 				{
-					 SendBroadcast_Localization(ClientID, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("You can't join the spectators right now"), NULL);
+					 SendBroadcast_Localization(0, ClientID, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("You can't join the spectators right now"), NULL);
 					 return;
 				}
 			}
@@ -1997,13 +2012,13 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					pPlayer->SetTeam(pMsg->m_Team);
 				}
 				else
-					SendBroadcast(ClientID, "Teams must be balanced, please join other team", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
+					SendBroadcast(0, ClientID, "Teams must be balanced, please join other team", BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 			}
 			else
 			{
 				char aBuf[128];
 				str_format(aBuf, sizeof(aBuf), "Only %d active players are allowed", Server()->MaxClients()-g_Config.m_SvSpectatorSlots);
-				SendBroadcast(ClientID, aBuf, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
+				SendBroadcast(0, ClientID, aBuf, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE);
 			}
 		}
 		else if (MsgID == NETMSGTYPE_CL_SETSPECTATORMODE && !m_World.m_Paused)
@@ -2502,7 +2517,7 @@ bool CGameContext::ConRestart(IConsole::IResult *pResult, void *pUserData)
 bool CGameContext::ConBroadcast(IConsole::IResult *pResult, void *pUserData)
 {
 	CGameContext *pSelf = (CGameContext *)pUserData;
-	pSelf->SendBroadcast(-1, pResult->GetString(0), BROADCAST_PRIORITY_SERVERANNOUNCE, pSelf->Server()->TickSpeed()*3);
+	pSelf->SendBroadcast(0, -1, pResult->GetString(0), BROADCAST_PRIORITY_SERVERANNOUNCE, pSelf->Server()->TickSpeed()*3);
 	
 	return true;
 }

@@ -33,7 +33,8 @@ MACRO_CONFIG_INT(InfMedicLimit, inf_medic_limit, 20, 0, 64, CFGFLAG_SERVER, "Max
 MACRO_CONFIG_INT(InfHeroLimit, inf_hero_limit, 1, 0, 64, CFGFLAG_SERVER, "Maximum number of heros in game")
 MACRO_CONFIG_INT(InfSupportLimit, inf_support_limit, 40, 0, 64, CFGFLAG_SERVER, "Maximum number of supports in game")
 MACRO_CONFIG_INT(InfReviverLimit, inf_reviver_limit, 1, 0, 4, CFGFLAG_SERVER, "Maximum number of revivers in game")
-MACRO_CONFIG_INT(InfDoctorLimit, inf_doctor_limit, 1, 0, 4, CFGFLAG_SERVER, "Maximum number of doctors in game")
+MACRO_CONFIG_INT(InfDoctorLimit1, inf_doctor_limit_1, 1, 0, 4, CFGFLAG_SERVER, "Maximum number of doctors in game")
+MACRO_CONFIG_INT(InfDoctorLimit2, inf_doctor_limit_2, 2, 0, 4, CFGFLAG_SERVER, "Maximum number of doctors in game")
 
 MACRO_CONFIG_INT(InfSoldierBombs, inf_soldier_bombs, 3, 1, 16, CFGFLAG_SERVER, "Number of bombs for the soldier")
 MACRO_CONFIG_INT(InfMercBombs, inf_merc_bombs, 15, 1, 100, CFGFLAG_SERVER, "Number of poison grenades for the mercenary")
@@ -108,6 +109,8 @@ MACRO_CONFIG_INT(InfEnableJoker, inf_enable_joker, 1, 0, 1, CFGFLAG_SERVER, "Mak
 MACRO_CONFIG_INT(InfEnableDoctor, inf_enable_doctor, 1, 0, 1, CFGFLAG_SERVER, "Makes the doctor class available")
 
 MACRO_CONFIG_INT(InfMinEngineerPlayer, inf_min_engineer_player, 8, 0, 32, CFGFLAG_SERVER, "Min engineer need player num")
+MACRO_CONFIG_INT(InfMinDoctorPlayer1, inf_min_doctor_player_1, 8, 0, 64, CFGFLAG_SERVER, "How many players are required to choose doctor(for 1)")
+MACRO_CONFIG_INT(InfMinDoctorPlayer2, inf_min_doctor_player_2, 20, 0, 64, CFGFLAG_SERVER, "How many players are required to choose doctor(for 2)")
 
 MACRO_CONFIG_INT(InfHeroFlagIndicator, inf_hero_flag_indicator, 1, 0, 1, CFGFLAG_SERVER, "Shows the heros in which direction the next flag is")
 MACRO_CONFIG_INT(InfHeroFlagIndicatorTime, inf_hero_flag_indicator_time, 3, 0, 1000, CFGFLAG_SERVER, "How many seconds the hero has to stand still until the indicator is shown")

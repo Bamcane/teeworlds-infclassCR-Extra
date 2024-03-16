@@ -595,7 +595,9 @@ void CGameControllerMOD::Snap(int SnappingClient)
 			ClassMask |= CMapConverter::MASK_SCIOGIST;
 		if(Reviver < g_Config.m_InfReviverLimit)
 			ClassMask |= CMapConverter::MASK_REVIVER;
-		if(Doctor < g_Config.m_InfDoctorLimit)
+		if(GameServer()->GetActivePlayerCount() > g_Config.m_InfMinDoctorPlayer2 && Doctor < g_Config.m_InfDoctorLimit2)
+			ClassMask |= CMapConverter::MASK_DOCTOR;
+		else if(GameServer()->GetActivePlayerCount() > g_Config.m_InfMinDoctorPlayer1 && GameServer()->GetActivePlayerCount() < g_Config.m_InfMinDoctorPlayer2 && Doctor < g_Config.m_InfDoctorLimit1)
 			ClassMask |= CMapConverter::MASK_DOCTOR;
 	}
 	
@@ -922,6 +924,7 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 	int nbDefender = 0;
 	int nbSciogist = 0;
 	int nbReviver = 0;
+	int nbDoctor = 0;
 	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);	
 	
 	while(Iter.Next())
@@ -956,6 +959,9 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 				break;
 			case PLAYERCLASS_REVIVER:
 				nbReviver++;
+				break;
+			case PLAYERCLASS_DOCTOR:
+				nbDoctor++;
 				break;
 		}
 	}
@@ -1014,7 +1020,7 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 		(nbReviver < g_Config.m_InfSupportLimit && g_Config.m_InfEnableJoker) ?
 		1.0f : 0.0f;
 	Probability[PLAYERCLASS_DOCTOR - START_HUMANCLASS - 1] =
-		(nbReviver < g_Config.m_InfDoctorLimit && g_Config.m_InfEnableDoctor) ?
+		(nbDoctor < g_Config.m_InfDoctorLimit1 && g_Config.m_InfEnableDoctor) ?
 		1.0f : 0.0f;
 
 	//Random is not fair enough. We keep the last two classes took by the player, and avoid to give him those again
@@ -1240,7 +1246,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		case PLAYERCLASS_REVIVER:
 			return (nbReviver < g_Config.m_InfReviverLimit);
 		case PLAYERCLASS_DOCTOR:
-			return (nbDoctor < g_Config.m_InfDoctorLimit);
+			return (nbDoctor < g_Config.m_InfDoctorLimit2);
 	}
 	
 	return false;
