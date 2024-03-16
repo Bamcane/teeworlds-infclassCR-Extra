@@ -158,7 +158,7 @@ void CDoctorFunnel::Tick()
         if (!GameServer()->GetPlayerChar(m_TargetCID) || m_ChangeTargetNeed > 10 || (GameServer()->GetPlayerChar(m_TargetCID) && distance(GameServer()->GetPlayerChar(m_TargetCID)->m_Pos, GameServer()->GetPlayerChar(m_Owner)->m_Pos) > 2000))
             ResetLock();
 
-        if (GameServer()->GetPlayerChar(m_TargetCID) && distance(m_TargetPos, m_Pos) < 150.f && Server()->Tick() % 2 == 0)
+        if (GameServer()->GetPlayerChar(m_TargetCID) && distance(m_TargetPos, m_Pos) < 150.f && Server()->Tick() % 10 == 0)
             GameServer()->GetPlayerChar(m_TargetCID)->TakeDamage(vec2(0, 0), g_Config.m_InfDoctorFunnelDamage, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
 
         ConsumePower(2);
