@@ -12,7 +12,6 @@ public:
 
         STATE_FOLLOW = 0,
         STATE_FIND,
-        STATE_TARGET,
         STATE_STAY,
         NUM_STATE,
     };
