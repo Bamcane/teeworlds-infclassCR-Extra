@@ -70,14 +70,12 @@ void CDoctorFunnel::Tick()
 
     int Power = GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery / 50.f;
     int Max = g_Config.m_InfDoctorMaxPowerBattery / 50.f;
-    GameServer()->SendBroadcast_Localization(0, m_Owner, BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
-                                             _("Remaining power of Funnel: {int:power}/{int:max}"),
-                                             "power", &Power,
-                                             "max", &Max);
-
+    dynamic_string State;
+    State.clear();
     switch (GameServer()->GetPlayerChar(m_Owner)->m_FunnelState)
     {
     case STATE_FOLLOW:
+        State.copy(Server()->Localization()->Localize(GameServer()->m_apPlayers[m_Owner]->GetLanguage(), _("Following")));
         if (!m_LowPower)
         {
             m_TargetPos = vec2(GetOwnerPos().x, GetOwnerPos().y - 128.f);
@@ -111,6 +109,7 @@ void CDoctorFunnel::Tick()
         break;
 
     case STATE_FIND:
+        State.copy(Server()->Localization()->Localize(GameServer()->m_apPlayers[m_Owner]->GetLanguage(), _("Tracking")));
         if (!m_LowPower)
             m_TargetPos = vec2(GetTargetPos().x, GetTargetPos().y);
         m_Pos += (m_TargetPos - m_Pos) / 24.f;
@@ -136,6 +135,7 @@ void CDoctorFunnel::Tick()
         break;
 
     case STATE_STAY:
+        State.copy(Server()->Localization()->Localize(GameServer()->m_apPlayers[m_Owner]->GetLanguage(), _("Charging")));
         m_Pos = vec2(GetOwnerPos().x, GetOwnerPos().y);
 
         if (GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery < g_Config.m_InfDoctorMaxPowerBattery)
@@ -150,6 +150,11 @@ void CDoctorFunnel::Tick()
     default:
         break;
     }
+    
+    GameServer()->SendBroadcast_Localization(0, m_Owner, BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+                                             _("Remaining power of Funnel: {int:power}/{int:max}\nState: {str:state}"),
+                                             "power", &Power,
+                                             "max", &Max, "state", State.buffer());
 }
 
 void CDoctorFunnel::Snap(int SnappingClient)

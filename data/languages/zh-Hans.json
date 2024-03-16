@@ -1028,7 +1028,19 @@
 		"value": "博士"
 	},
 	{
-		"key": "Remaining power of Funnel: {int:power}/{int:max}",
-		"value": "浮游炮剩余电量：{int:power}/{int:max}"
+		"key": "Remaining power of Funnel: {int:power}/{int:max}\nState: {str:state}",
+		"value": "浮游炮剩余电量：{int:power}/{int:max}\n{str:state}模式"
+	},
+	{
+		"key": "Following",
+		"value": "跟随"
+	},
+	{
+		"key": "Tracking",
+		"value": "追踪"
+	},
+	{
+		"key": "Charging",
+		"value": "充电"
 	}
 ]}
