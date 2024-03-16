@@ -1042,5 +1042,9 @@
 	{
 		"key": "Charging",
 		"value": "充电"
+	},
+	{
+		"key": "You used an emergency battery!",
+		"value": "你使用了应急电池！"
 	}
 ]}

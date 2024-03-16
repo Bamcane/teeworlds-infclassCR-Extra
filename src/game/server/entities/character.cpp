@@ -1383,6 +1383,13 @@ void CCharacter::FireWeapon()
 				m_FlagPut = true;
 			}
 		}
+		else if (GetClass() == PLAYERCLASS_DOCTOR)
+		{
+			GameServer()->CreateSound(m_Pos, SOUND_RIFLE_BOUNCE);
+			GameServer()->CreateSound(m_Pos, SOUND_WEAPON_SWITCH);
+			m_PowerBattery += g_Config.m_InfDoctorMaxPowerBattery*2;
+			GameServer()->SendChatTarget_Localization(GetPlayer()->GetCID(), CHATCATEGORY_HUMANS, _("You used an emergency battery!"));
+		}
 		else
 		{
 			int ShotSpread = 3;

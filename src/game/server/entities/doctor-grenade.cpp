@@ -109,6 +109,6 @@ void CDoctorGrenade::Snap(int SnappingClient)
 
 void CDoctorGrenade::Explode()
 {
-    m_ExplosionTick = 50;
+    m_ExplosionTick = 25;
     GameServer()->CreateExplosion(m_ActualPos, m_Owner, WEAPON_GRENADE, false);
 }
