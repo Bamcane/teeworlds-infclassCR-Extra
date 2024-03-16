@@ -24,6 +24,31 @@ CDoctorFunnel::~CDoctorFunnel()
     Server()->SnapFreeID(m_ConnectID);
 }
 
+void CDoctorFunnel::ConsumePower(int Power)
+{
+    if (!GameServer()->GetPlayerChar(m_Owner))
+        return;
+
+    if (GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery <= 0)
+    {
+        GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery = 0;
+        m_LowPower = true;
+    }
+    else
+        GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery -= Power;
+}
+
+void CDoctorFunnel::FunnelMove()
+{
+    m_Pos += (m_TargetPos - m_Pos) / 24.f;
+}
+
+void CDoctorFunnel::ResetLock()
+{
+    m_LockTarget = false;
+    m_ChangeTargetNeed = 0;
+}
+
 vec2 CDoctorFunnel::GetOwnerPos()
 {
     return GameServer()->GetPlayerChar(m_Owner)->m_Pos;
@@ -40,17 +65,33 @@ vec2 CDoctorFunnel::GetTargetPos()
             if (!Iter.Player()->GetCharacter())
                 continue;
 
-            if (!Iter.Player()->IsZombie())
+            if (!Iter.Player()->IsZombie() ||
+                (Iter.Player()->GetClass() == PLAYERCLASS_UNDEAD && Iter.Player()->GetCharacter()->IsFrozen()) ||
+                (Iter.Player()->GetClass() == PLAYERCLASS_VOODOO && Iter.Player()->GetCharacter()->m_VoodooAboutToDie))
                 continue;
-                
-            if(distance(Iter.Player()->GetCharacter()->m_Pos, GameServer()->GetPlayerChar(m_Owner)->m_Pos) < 2000)
+
+            if (distance(Iter.Player()->GetCharacter()->m_Pos, GameServer()->GetPlayerChar(m_Owner)->m_Pos) < 2000)
                 Targets.push_back(Iter.ClientID());
+        }
+
+        float Distance = 999999999;
+        int ID = -1;
+        for (size_t i = 0; i < Targets.size(); i++)
+        {
+            if (!GameServer()->GetPlayerChar(Targets[i]))
+                continue;
+
+            if (distance(GameServer()->GetPlayerChar(Targets[i])->m_Pos, GameServer()->GetPlayerChar(m_Owner)->m_Pos) < Distance)
+            {
+                Distance = distance(GameServer()->GetPlayerChar(Targets[i])->m_Pos, GameServer()->GetPlayerChar(m_Owner)->m_Pos);
+                ID = Targets[i];
+            }
         }
 
         if (Targets.size() > 0)
         {
             m_LockTarget = true;
-            m_TargetCID = Targets[random_int(0, Targets.size() - 1)];
+            m_TargetCID = ID;
         }
     }
 
@@ -65,7 +106,7 @@ void CDoctorFunnel::Tick()
     if (!GameServer()->GetPlayerChar(m_Owner) || GameServer()->GetPlayerChar(m_Owner)->IsZombie())
         return Reset();
 
-    if(Server()->Tick()%50 == 0)
+    if (Server()->Tick() % 50 == 0)
         m_ChangeTargetNeed--;
 
     int Power = GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery / 50.f;
@@ -75,7 +116,9 @@ void CDoctorFunnel::Tick()
     switch (GameServer()->GetPlayerChar(m_Owner)->m_FunnelState)
     {
     case STATE_FOLLOW:
+    {
         State.copy(Server()->Localization()->Localize(GameServer()->m_apPlayers[m_Owner]->GetLanguage(), _("Following")));
+        ResetLock();
         if (!m_LowPower)
         {
             m_TargetPos = vec2(GetOwnerPos().x, GetOwnerPos().y - 128.f);
@@ -88,7 +131,7 @@ void CDoctorFunnel::Tick()
 
                 float Len = distance(pChr->m_Pos, m_Pos);
 
-                if (Len < 300 && Server()->Tick() % 10 == 0)
+                if (Len < 500 && Server()->Tick() % 10 == 0)
                 {
                     vec2 Direction = normalize(pChr->m_Pos - m_Pos);
 
@@ -98,44 +141,33 @@ void CDoctorFunnel::Tick()
                 }
             }
         }
-        m_Pos += (m_TargetPos - m_Pos) / 24.f;
-        if (GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery <= 0)
-        {
-            GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery = 0;
-            m_LowPower = true;
-        }
-        else
-            GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery--;
+        FunnelMove();
+        ConsumePower(1);
         break;
-
+    }
     case STATE_FIND:
+    {
         State.copy(Server()->Localization()->Localize(GameServer()->m_apPlayers[m_Owner]->GetLanguage(), _("Tracking")));
+
         if (!m_LowPower)
             m_TargetPos = vec2(GetTargetPos().x, GetTargetPos().y);
-        m_Pos += (m_TargetPos - m_Pos) / 24.f;
+        FunnelMove();
         if (m_LowPower)
             break;
 
-        if ((!GameServer()->GetPlayerChar(m_TargetCID) && m_ChangeTargetNeed > 10) || (GameServer()->GetPlayerChar(m_TargetCID) && distance(GameServer()->GetPlayerChar(m_TargetCID)->m_Pos, GameServer()->GetPlayerChar(m_Owner)->m_Pos) > 2000))
-        {
-            m_LockTarget = false;
-            m_ChangeTargetNeed = 0;
-        }
+        if (!GameServer()->GetPlayerChar(m_TargetCID) || m_ChangeTargetNeed > 10 || (GameServer()->GetPlayerChar(m_TargetCID) && distance(GameServer()->GetPlayerChar(m_TargetCID)->m_Pos, GameServer()->GetPlayerChar(m_Owner)->m_Pos) > 2000))
+            ResetLock();
 
-        if (GameServer()->GetPlayerChar(m_TargetCID) && distance(m_TargetPos, m_Pos) < 150.f && Server()->Tick() % 10 == 0)
+        if (GameServer()->GetPlayerChar(m_TargetCID) && distance(m_TargetPos, m_Pos) < 150.f && Server()->Tick() % 2 == 0)
             GameServer()->GetPlayerChar(m_TargetCID)->TakeDamage(vec2(0, 0), g_Config.m_InfDoctorFunnelDamage, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
 
-        if (GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery <= 0)
-        {
-            GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery = 0;
-            m_LowPower = true;
-        }
-        else
-            GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery -= 2;
+        ConsumePower(2);
         break;
-
+    }
     case STATE_STAY:
+    {
         State.copy(Server()->Localization()->Localize(GameServer()->m_apPlayers[m_Owner]->GetLanguage(), _("Charging")));
+        ResetLock();
         m_Pos = vec2(GetOwnerPos().x, GetOwnerPos().y);
 
         if (GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery < g_Config.m_InfDoctorMaxPowerBattery)
@@ -146,11 +178,11 @@ void CDoctorFunnel::Tick()
         }
         m_LowPower = false;
         break;
-
+    }
     default:
         break;
     }
-    
+
     GameServer()->SendBroadcast_Localization(0, m_Owner, BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
                                              _("Remaining power of Funnel: {int:power}/{int:max}\nState: {str:state}"),
                                              "power", &Power,

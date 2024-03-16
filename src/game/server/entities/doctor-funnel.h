@@ -27,6 +27,10 @@ public:
     vec2 GetOwnerPos();
     vec2 GetTargetPos();
 
+    void ConsumePower(int Power);
+    void FunnelMove();
+    void ResetLock();
+
 private:
     int m_Owner;
     int m_Angle;
