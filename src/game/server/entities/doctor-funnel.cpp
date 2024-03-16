@@ -183,7 +183,7 @@ void CDoctorFunnel::Tick()
         break;
     }
 
-    GameServer()->SendBroadcast_Localization(0, m_Owner, BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+    GameServer()->SendBroadcast_Localization(4, m_Owner, BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
                                              _("Remaining power of Funnel: {int:power}/{int:max}\nState: {str:state}"),
                                              "power", &Power,
                                              "max", &Max, "state", State.buffer());
