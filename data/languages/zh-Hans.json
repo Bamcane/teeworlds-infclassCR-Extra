@@ -1029,7 +1029,7 @@
 	},
 	{
 		"key": "Remaining power of Funnel: {int:power}/{int:max}\nState: {str:state}",
-		"value": "浮游炮剩余电量：{int:power}/{int:max}\n{str:state}模式"
+		"value": "- 浮游炮剩余电量：{int:power}/{int:max} -\n- 当前模式：{str:state} -"
 	},
 	{
 		"key": "Following",
