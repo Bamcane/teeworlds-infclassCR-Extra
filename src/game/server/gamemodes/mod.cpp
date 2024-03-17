@@ -718,6 +718,14 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 					pKiller->GetCharacter()->IncreaseHealth(4);
 				}
 			}
+
+			if(pKiller->GetClass() == PLAYERCLASS_DOCTOR && Weapon == WEAPON_GRENADE)
+			{
+				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_INFECTED, pKiller->GetClass(), Server()->ClientName(pKiller->GetCID()), GameServer()->Console());
+				
+				if(pKiller->GetCharacter())
+					pKiller->GetCharacter()->m_PowerBattery += 25;
+			}
 		}
 	}
 	

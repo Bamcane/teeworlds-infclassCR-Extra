@@ -17,7 +17,7 @@ CDoctorGrenade::CDoctorGrenade(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2
     m_LifeSpan = g_Config.m_InfDoctorGrenadeLifeSpan * Server()->TickSpeed();
     m_StartTick = Server()->Tick();
     m_ExplosionTick = 0;
-    
+
     GameWorld()->InsertEntity(this);
 }
 
@@ -51,14 +51,14 @@ void CDoctorGrenade::Tick()
     vec2 PrevPos = GetPos(Pt);
     vec2 CurPos = GetPos(Ct);
 
-    if(m_ExplosionTick)
+    if (m_ExplosionTick)
     {
         m_ExplosionTick--;
-        if(m_ExplosionTick%5 == 0)
+        if (m_ExplosionTick % 2 == 0)
             GameServer()->CreateSound(m_ActualPos, SOUND_HOOK_NOATTACH);
-        if(m_ExplosionTick <= 0)
+        if (m_ExplosionTick <= 0)
         {
-            new CGrowingExplosion(GameWorld(), m_ActualPos, vec2(0,0), m_Owner, 7.f, GROWINGEXPLOSIONEFFECT_BOOM_INFECTED);
+            new CGrowingExplosion(GameWorld(), m_ActualPos, vec2(0, 0), m_Owner, 7.f, GROWINGEXPLOSIONEFFECT_BOOM_INFECTED, true);
             Reset();
         }
         return;

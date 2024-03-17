@@ -3698,13 +3698,15 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("See /help funnel"), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Doctor can fire shotgun to charge Funnel's battery by twice."), NULL); 
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Doctor can fire shotgun to charge Funnel's battery."), NULL); 
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Doctor's grenade will explode with a delay of half a second"), NULL); 
 			Buffer.append("\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("And fly in a straight line."), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Restore battery when using grenades to kill zombies."), NULL); 
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Doctor made by ST-Chara(Flower)"), NULL); 
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Doctor made by ST-Chara(Flower) for 30 yuan."), NULL); 
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
@@ -3732,8 +3734,6 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("State: Charging"), NULL); 
 			Buffer.append("\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("In this state, Funnel will remain on the owner and slowly restore power."), NULL); 
-			Buffer.append("\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("This state will not attack."), NULL); 
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("When the power returns to zero, Funnel will stop moving"), NULL);
 			Buffer.append("\n\n");

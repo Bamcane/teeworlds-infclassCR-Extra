@@ -170,11 +170,10 @@ void CDoctorFunnel::Tick()
         ResetLock();
         m_Pos = vec2(GetOwnerPos().x, GetOwnerPos().y);
 
-        if (GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery < g_Config.m_InfDoctorMaxPowerBattery)
+        if (GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery < g_Config.m_InfDoctorMaxPowerBattery && Server()->Tick() % 50 == 0)
         {
-            GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery++;
-            if (Server()->Tick() % 5 == 0)
-                GameServer()->CreateSound(GameServer()->GetPlayerChar(m_Owner)->m_Pos, SOUND_HOOK_NOATTACH);
+            GameServer()->CreateSound(GameServer()->GetPlayerChar(m_Owner)->m_Pos, SOUND_HOOK_NOATTACH);
+            GameServer()->GetPlayerChar(m_Owner)->m_PowerBattery += 25;
         }
         m_LowPower = false;
         break;

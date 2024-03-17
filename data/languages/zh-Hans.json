@@ -1072,8 +1072,8 @@
 		"value": "并沿直线飞行"
 	},
 	{
-		"key": "Doctor made by ST-Chara(Flower)",
-		"value": "博士由ST-Chara(别名Flower)制作"
+		"key": "Doctor made by ST-Chara(Flower) for 30 yuan.",
+		"value": "博士由ST-Chara(别名Flower)制作(价值30元)"
 	},
 	{
 		"key": "Funnel",
@@ -1118,10 +1118,6 @@
 	{
 		"key": "In this state, Funnel will remain on the owner and slowly restore power.",
 		"value": "在这个模式里，浮游炮会回到主人身上并缓慢恢复电量"
-	},
-	{
-		"key": "This state will not attack.",
-		"value": "这个模式下浮游炮不会攻击"
 	},
 	{
 		"key": "When the power returns to zero, Funnel will stop moving",

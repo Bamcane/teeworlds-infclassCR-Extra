@@ -142,9 +142,9 @@ CCharacter::CCharacter(CGameWorld *pWorld, IConsole *pConsole)
 	m_BroadcastHealBoomReady = -100;
 	m_pHeroFlag = nullptr;
 	m_ResetKillsTime = 0;
-	m_FunnelState = -1;
-	m_PowerBattery = 0;
-	;
+	m_FunnelState = CDoctorFunnel::STATE_STAY;
+	m_PowerBattery = g_Config.m_InfDoctorMaxPowerBattery;
+
 	/* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -1033,7 +1033,6 @@ void CCharacter::FireWeapon()
 				new CDoctorFunnel(GameWorld(), m_Pos, GetPlayer()->GetCID());
 				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 				m_FunnelState = CDoctorFunnel::STATE_FOLLOW;
-				m_PowerBattery = g_Config.m_InfDoctorMaxPowerBattery;
 			}
 			else
 			{
@@ -1387,7 +1386,7 @@ void CCharacter::FireWeapon()
 		{
 			GameServer()->CreateSound(m_Pos, SOUND_RIFLE_BOUNCE);
 			GameServer()->CreateSound(m_Pos, SOUND_WEAPON_SWITCH);
-			m_PowerBattery += g_Config.m_InfDoctorMaxPowerBattery*2;
+			m_PowerBattery += g_Config.m_InfDoctorMaxPowerBattery;
 			GameServer()->SendChatTarget_Localization(GetPlayer()->GetCID(), CHATCATEGORY_HUMANS, _("You used an emergency battery!"));
 		}
 		else

@@ -5,7 +5,7 @@
 
 #include <game/server/gamecontext.h>
 
-CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir, int Owner, int Radius, int ExplosionEffect)
+CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir, int Owner, int Radius, int ExplosionEffect, bool NoClip)
 		: CEntity(pGameWorld, CGameWorld::ENTTYPE_GROWINGEXPLOSION),
 		m_pGrowingMap(NULL),
 		m_pGrowingMapVec(NULL)
@@ -21,6 +21,8 @@ CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir,
 	m_StartTick = Server()->Tick();
 	m_Owner = Owner;
 	m_ExplosionEffect = ExplosionEffect;
+
+	m_NoClip = NoClip;
 	
 	mem_zero(m_Hit, sizeof(m_Hit));
 
@@ -31,7 +33,7 @@ CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir,
 		static_cast<float>(static_cast<int>(round(m_Pos.y))/32)*32.0);
 	
 	//Check is the tile is occuped, and if the direction is valide
-	if(GameServer()->Collision()->CheckPoint(explosionTile) && length(Dir) <= 1.1)
+	if(!NoClip && GameServer()->Collision()->CheckPoint(explosionTile) && length(Dir) <= 1.1)
 	{
 		m_SeedPos = vec2(16.0f, 16.0f) + vec2(
 		static_cast<float>(static_cast<int>(round(m_Pos.x + 32.0f*Dir.x))/32)*32.0,
@@ -50,7 +52,7 @@ CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir,
 		for(int i=0; i<m_GrowingMap_Length; i++)
 		{
 			vec2 Tile = m_SeedPos + vec2(32.0f*(i-m_MaxGrowing), 32.0f*(j-m_MaxGrowing));
-			if(GameServer()->Collision()->CheckPoint(Tile) || distance(Tile, m_SeedPos) > m_MaxGrowing*32.0f)
+			if((!m_NoClip && GameServer()->Collision()->CheckPoint(Tile)) || distance(Tile, m_SeedPos) > m_MaxGrowing*32.0f)
 			{
 				m_pGrowingMap[j*m_GrowingMap_Length+i] = -2;
 			}
