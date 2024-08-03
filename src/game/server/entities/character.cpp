@@ -142,7 +142,7 @@ CCharacter::CCharacter(CGameWorld *pWorld, IConsole *pConsole)
 	m_BroadcastHealBoomReady = -100;
 	m_pHeroFlag = nullptr;
 	m_ResetKillsTime = 0;
-	m_FunnelState = CDoctorFunnel::STATE_STAY;
+	m_FunnelState = CDoctorFunnel::STATE_NO;
 	m_PowerBattery = g_Config.m_InfDoctorMaxPowerBattery;
 
 	/* INFECTION MODIFICATION END *****************************************/
@@ -1028,7 +1028,7 @@ void CCharacter::FireWeapon()
 		}
 		else if (GetClass() == PLAYERCLASS_DOCTOR)
 		{
-			if (m_FunnelState == -1)
+			if (m_FunnelState == CDoctorFunnel::STATE_NO)
 			{
 				new CDoctorFunnel(GameWorld(), m_Pos, GetPlayer()->GetCID());
 				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
@@ -1921,9 +1921,6 @@ void CCharacter::HandleWeapons()
 		if (m_aWeapons[i].m_ReloadTimer)
 			m_aWeapons[i].m_ReloadTimer--;
 	}
-
-	if (m_aWeapons[m_ActiveWeapon].m_ReloadTimer)
-		m_aWeapons[m_ActiveWeapon].m_ReloadTimer--;
 
 	// fire Weapon, if wanted
 	FireWeapon();

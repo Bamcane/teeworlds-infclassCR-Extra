@@ -10,6 +10,7 @@ public:
     {
         NUM_LASER = 9,
 
+        STATE_NO = -1,
         STATE_FOLLOW = 0,
         STATE_FIND,
         STATE_STAY,
