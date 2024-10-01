@@ -16,7 +16,6 @@ int Geolocation::get_country_iso_numeric_code(std::string& ip) {
 		return get_iso_numeric_code(map_str);
 	}
 	catch (std::length_error) {
-		std::cout << "This ip was not found in database: " << ip << std::endl;
 		return -1;
 	}
 }

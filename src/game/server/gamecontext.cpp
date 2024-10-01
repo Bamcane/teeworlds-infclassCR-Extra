@@ -2107,7 +2107,10 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			// IP geolocation start
 			#ifdef CONF_GEOLOCATION
 			std::string ip = Server()->GetClientIP(ClientID);
-			Server()->SetClientCountry(ClientID, geolocation->get_country_iso_numeric_code(ip));
+			int ISOCode = geolocation->get_country_iso_numeric_code(ip);
+			if(ISOCode == -1)
+				dbg_msg("geo", "This ip was not found in database: %s", ip.c_str());
+			Server()->SetClientCountry(ClientID, ISOCode);
 			#endif
 			// IP geolocation end
 
