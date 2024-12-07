@@ -569,6 +569,8 @@ int CServer::Init()
 	SetFireDelay(INFWEAPON_DOCTOR_RIFLE, 500);
 	SetFireDelay(INFWEAPON_DOCTOR_SHOTGUN, 300);
 
+	SetFireDelay(INFWEAPON_SIEGRID_GUN, 1);
+
 	SetAmmoRegenTime(INFWEAPON_NONE, 0);
 	SetAmmoRegenTime(INFWEAPON_HAMMER, 0);
 	SetAmmoRegenTime(INFWEAPON_SLIME_HAMMER, 0);
@@ -628,6 +630,8 @@ int CServer::Init()
 	SetAmmoRegenTime(INFWEAPON_DOCTOR_HAMMER, 0);
 	SetAmmoRegenTime(INFWEAPON_DOCTOR_RIFLE, GetAmmoRegenTime(INFWEAPON_RIFLE));	
 	SetAmmoRegenTime(INFWEAPON_DOCTOR_SHOTGUN, 100000);
+
+	SetAmmoRegenTime(INFWEAPON_SIEGRID_GUN, 0);
 
 	SetMaxAmmo(INFWEAPON_NONE, -1);
 	SetMaxAmmo(INFWEAPON_HAMMER, -1);
@@ -690,6 +694,8 @@ int CServer::Init()
 	SetMaxAmmo(INFWEAPON_DOCTOR_RIFLE, 5);
 	SetMaxAmmo(INFWEAPON_DOCTOR_SHOTGUN, 1);
 
+	SetMaxAmmo(INFWEAPON_SIEGRID_GUN, -1);
+
 	SetClassAvailability(PLAYERCLASS_ENGINEER, 2);
 	SetClassAvailability(PLAYERCLASS_SOLDIER, 2);
 	SetClassAvailability(PLAYERCLASS_MERCENARY, 2);
@@ -707,7 +713,8 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_MAGICIAN, 2);
 	SetClassAvailability(PLAYERCLASS_JOKER, 2);
 	SetClassAvailability(PLAYERCLASS_DOCTOR, 2);
-	
+	SetClassAvailability(PLAYERCLASS_SIEGRID, 2);
+
 	SetClassAvailability(PLAYERCLASS_SMOKER, 1);
 	SetClassAvailability(PLAYERCLASS_HUNTER, 1);
 	SetClassAvailability(PLAYERCLASS_BAT, 1);

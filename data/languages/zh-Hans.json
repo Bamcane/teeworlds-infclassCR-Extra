@@ -1126,5 +1126,49 @@
 	{
 		"key": "Funnel made by ST-Chara(Flower)",
 		"value": "浮游炮由ST-Chara(别名Flower)制作"
+	},
+	{
+		"key": "Siegrid",
+		"value": "西丽德"
+	},
+	{
+		"key": "Siegrid can use her gun to control a hammer.",
+		"value": "西丽德可以用她的手枪来控制链球"
+	},
+	{
+		"key": "Causing damage to infected based on the speed of the hammer.",
+		"value": "链球对感染者造成的伤害取决于链球的速度"
+	},
+	{
+		"key": "You can set the action mode of the hammer by pressing F4.",
+		"value": "你可以通过按下F4设置链球的行动模式"
+	},
+	{
+		"key": "There are 2 modes",
+		"value": "总共有两个模式"
+	},
+	{
+		"key": "Hammer Mode - Self:",
+		"value": "链球模式 - 拉取："
+	},
+	{
+		"key": "- The hammer will fly towards you when you are firing.",
+		"value": "- 链球会在你按下开火键的时候被拉回到你身边"
+	},
+	{
+		"key": "Hammer Mode - Cursor:",
+		"value": "链球模式 - 伸出："
+	},
+	{
+		"key": "- When you firing, the hammer will fly towards your cursor.",
+		"value": "- 当你按下开火键，链球会冲向你瞄准的地方"
+	},
+	{
+		"key": "Hammer Mode: Self",
+		"value": "链球模式：拉取"
+	},
+	{
+		"key": "Hammer Mode: Cursor",
+		"value": "链球模式：伸出"
 	}
 ]}

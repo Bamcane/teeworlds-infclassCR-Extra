@@ -541,6 +541,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		int Sciogist = 0;
 		int Reviver = 0;
 		int Doctor = 0;
+		int Siegrid = 0;
 
 		CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 		while(Iter.Next())
@@ -580,6 +581,9 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_DOCTOR:
 					Doctor++;
 					break;
+				case PLAYERCLASS_SIEGRID:
+					Siegrid++;
+					break;
 			}
 		}
 		
@@ -599,6 +603,8 @@ void CGameControllerMOD::Snap(int SnappingClient)
 			ClassMask |= CMapConverter::MASK_DOCTOR;
 		else if(GameServer()->GetActivePlayerCount() > g_Config.m_InfMinDoctorPlayer1 && GameServer()->GetActivePlayerCount() < g_Config.m_InfMinDoctorPlayer2 && Doctor < g_Config.m_InfDoctorLimit1)
 			ClassMask |= CMapConverter::MASK_DOCTOR;
+		if(!Siegrid)
+			ClassMask |= CMapConverter::MASK_SIEGRID;
 	}
 	
 	if(SnappingClient != -1)
@@ -933,6 +939,7 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 	int nbSciogist = 0;
 	int nbReviver = 0;
 	int nbDoctor = 0;
+	int nbSiegrid = 0;
 	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);	
 	
 	while(Iter.Next())
@@ -971,6 +978,9 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 			case PLAYERCLASS_DOCTOR:
 				nbDoctor++;
 				break;
+			case PLAYERCLASS_SIEGRID:
+				nbSiegrid++;
+				break;
 		}
 	}
 	
@@ -995,6 +1005,10 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 	Probability[PLAYERCLASS_SCIOGIST - START_HUMANCLASS - 1] =
 		(nbSciogist < g_Config.m_InfSciogistLimit && g_Config.m_InfEnableSciogist) ?
 		1.0f : 0.0f;
+	Probability[PLAYERCLASS_SIEGRID - START_HUMANCLASS - 1] =
+		(!nbSiegrid && g_Config.m_InfEnableSiegrid) ?
+			1.0f :
+			0.0f;
 
 	Probability[PLAYERCLASS_MERCENARY - START_HUMANCLASS - 1] =
 		(nbSupport < g_Config.m_InfSupportLimit && g_Config.m_InfEnableMercenary) ?
@@ -1168,6 +1182,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnableJoker;
 		case PLAYERCLASS_DOCTOR:
 			return g_Config.m_InfEnableDoctor;
+		case PLAYERCLASS_SIEGRID:
+			return g_Config.m_InfEnableSiegrid;
 		default:
 			return false;
 	}
@@ -1186,6 +1202,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 	int nbReviver = 0;
 	int nbJoker = 0;
 	int nbDoctor = 0;
+	int nbSiegrid = 0;
 
 	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 	while(Iter.Next())
@@ -1225,6 +1242,9 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_DOCTOR:
 				nbDoctor++;
 				break;
+			case PLAYERCLASS_SIEGRID:
+				nbSiegrid++;
+				break;
 		}
 	}
 	
@@ -1255,6 +1275,8 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			return (nbReviver < g_Config.m_InfReviverLimit);
 		case PLAYERCLASS_DOCTOR:
 			return (nbDoctor < g_Config.m_InfDoctorLimit2);
+		case PLAYERCLASS_SIEGRID:
+			return (!nbSiegrid);
 	}
 	
 	return false;

@@ -49,6 +49,7 @@
 #include "anti-airmine.h"
 #include "doctor-grenade.h"
 #include "doctor-funnel.h"
+#include "siegrid-hammer.h"
 
 // input count
 struct CInputCount
@@ -370,7 +371,7 @@ void CCharacter::HandleWaterJump()
 void CCharacter::HandleNinja()
 {
 	/* INFECTION MODIFICATION START ***************************************/
-	if (GetInfWeaponID(m_ActiveWeapon) != INFWEAPON_NINJA_HAMMER)
+	if (GetInfWeaponID(m_ActiveWeapon) != INFWEAPON_NINJA_HAMMER && GetClass() != PLAYERCLASS_SIEGRID)
 		return;
 	/* INFECTION MODIFICATION END *****************************************/
 
@@ -401,6 +402,10 @@ void CCharacter::HandleNinja()
 			vec2 Center = OldPos + Dir * 0.5f;
 			int Num = GameServer()->m_World.FindEntities(Center, Radius, (CEntity **)aEnts, MAX_CLIENTS, CGameWorld::ENTTYPE_CHARACTER);
 
+			int Damage = min(g_pData->m_Weapons.m_Ninja.m_pBase->m_Damage + m_NinjaStrengthBuff, 20);
+			if (GetClass() == PLAYERCLASS_SIEGRID)
+				Damage = 2;
+
 			for (int i = 0; i < Num; ++i)
 			{
 				if (aEnts[i] == this)
@@ -426,7 +431,7 @@ void CCharacter::HandleNinja()
 				if (m_NumObjectsHit < 10)
 					m_apHitObjects[m_NumObjectsHit++] = aEnts[i];
 
-				aEnts[i]->TakeDamage(vec2(0, -10.0f), min(g_pData->m_Weapons.m_Ninja.m_pBase->m_Damage + m_NinjaStrengthBuff, 20), m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
+				aEnts[i]->TakeDamage(vec2(0, -10.0f), Damage, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
 			}
 		}
 	}
@@ -1337,6 +1342,32 @@ void CCharacter::FireWeapon()
 
 			GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 		}
+		else if(GetClass() == PLAYERCLASS_SIEGRID)
+		{
+			if(!m_pHammer)
+				return;
+			
+			int Type = g_Config.m_InfSiegridHammerType;
+			if (Type == ESiegridHammerType::HAMMERTYPE_BOTH)
+				Type = m_HammerType;
+
+			vec2 Force;
+			if (Type)
+				Force = normalize(ProjStartPos - m_pHammer->GetPos());
+			else
+			{
+				// As same as portal
+				vec2 HammerShift = vec2(m_Input.m_TargetX, m_Input.m_TargetY);
+				vec2 HammerDir = normalize(HammerShift);
+				if (length(HammerShift) > 500.0f)
+					HammerShift = HammerDir * 500.0f;
+				vec2 HammerPos = m_Pos + HammerShift;
+				Force = normalize(HammerPos - m_pHammer->GetPos());
+			}
+			// also do some "imprecision"
+			m_pHammer->GiveForce(vec2(Force.x + (random_float()*0.3f-random_float()*0.3f), Force.y + (random_float()*0.3f-random_float()*0.3f)));
+			return;
+		}
 		else
 		{
 			CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
@@ -2098,6 +2129,26 @@ void CCharacter::OnDirectInput(CNetObj_PlayerInput *pNewInput)
 	{
 		HandleWeaponSwitch();
 		FireWeapon();
+		// sprint
+		if(m_LatestInput.m_Direction && m_LatestInput.m_Direction != m_LatestPrevInput.m_Direction && GetClass() == PLAYERCLASS_SIEGRID && Server()->Tick() - m_LastSprintTick > g_Config.m_InfSiegridSprintTimer)
+		{
+			if(Server()->Tick() - m_LastTapMoveTick < 10 && m_LastMoveDirection == m_LatestInput.m_Direction)
+			{
+				// reset Hit objects
+				m_NumObjectsHit = 0;
+
+				m_DartDir = vec2(sign(m_LatestInput.m_Direction), 0.f);
+				m_DartLifeSpan = g_pData->m_Weapons.m_Ninja.m_Movetime * Server()->TickSpeed() / 1000;
+				m_DartOldVelAmount = length(m_Core.m_Vel);
+				m_LastSprintTick = Server()->Tick();
+				GameServer()->CreatePlayerSpawn(m_Pos);
+			}
+			else
+			{
+				m_LastTapMoveTick = Server()->Tick();
+				m_LastMoveDirection = m_LatestInput.m_Direction;
+			}
+		}
 	}
 
 	mem_copy(&m_LatestPrevInput, &m_LatestInput, sizeof(m_LatestInput));
@@ -2246,7 +2297,7 @@ void CCharacter::Tick()
 					GrantSpawnProtection();
 				}
 			}
-			else if (!m_IsMagic)
+			else if (!m_IsMagic && GetClass() != PLAYERCLASS_SIEGRID)
 			{
 				m_pPlayer->StartInfection();
 				Freeze(3, m_pPlayer->GetCID(), FREEZEREASON_INFECTION);
@@ -2541,6 +2592,15 @@ void CCharacter::Tick()
 		}
 	}
 
+	if(GetClass() == PLAYERCLASS_SIEGRID)
+	{
+		if(GameServer()->GetHumanCount() == 1 && GameServer()->GetActivePlayerCount() > 3)
+		{
+			Die(m_pPlayer->GetCID(), WEAPON_SELF);
+			return;
+		}
+	}
+
 	if (GetClass() == PLAYERCLASS_NINJA && IsGrounded() && m_DartLifeSpan <= 0)
 	{
 		m_DartLeft = g_Config.m_InfNinjaJump;
@@ -2803,6 +2863,13 @@ void CCharacter::Tick()
 						Broadcast = true;
 					}
 					break;
+				case CMapConverter::MENUCLASS_SIEGRID:
+					if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SIEGRID))
+					{
+						GameServer()->SendBroadcast_Localization(LineBreak, m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Siegrid"), NULL);
+						Broadcast = true;
+					}
+					break;
 				}
 			}
 
@@ -2875,6 +2942,9 @@ void CCharacter::Tick()
 				case CMapConverter::MENUCLASS_DOCTOR:
 					if (GameServer()->GetActivePlayerCount() >= g_Config.m_InfMinDoctorPlayer1)
 						NewClass = PLAYERCLASS_DOCTOR;
+					break;
+				case CMapConverter::MENUCLASS_SIEGRID:
+					NewClass = PLAYERCLASS_SIEGRID;
 					break;
 				}
 
@@ -3288,6 +3358,11 @@ void CCharacter::GiveGift(int GiftType)
 		break;
 	case PLAYERCLASS_LOOPER:
 		GiveWeapon(WEAPON_RIFLE, -1);
+		break;
+	case PLAYERCLASS_SIEGRID:
+		GiveWeapon(WEAPON_GRENADE, -1);
+		GiveWeapon(WEAPON_RIFLE, -1);
+		GiveWeapon(WEAPON_SHOTGUN, -1);
 		break;
 	case PLAYERCLASS_SCIOGIST:
 		GiveWeapon(WEAPON_GRENADE, -1);
@@ -3771,6 +3846,13 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		Mode = TAKEDAMAGEMODE_NOINFECTION;
 	}
 
+	if(GetClass() == PLAYERCLASS_SIEGRID && Mode == TAKEDAMAGEMODE_INFECTION)
+	{
+		Dmg = 11;
+		// A zombie can't infect siegrid
+		Mode = TAKEDAMAGEMODE_NOINFECTION;
+	}
+
 	if (pKillerChar && pKillerChar->IsInLove())
 	{
 		Dmg = 0;
@@ -4231,6 +4313,8 @@ void CCharacter::Snap(int SnappingClient)
 	int EmoteNormal = EMOTE_NORMAL;
 	if (IsZombie())
 		EmoteNormal = EMOTE_ANGRY;
+	if(GetClass() == PLAYERCLASS_SIEGRID)
+		EmoteNormal = EMOTE_HAPPY;
 	if (m_IsInvisible)
 		EmoteNormal = EMOTE_BLINK;
 	if (m_IsMagic)
@@ -4693,6 +4777,27 @@ void CCharacter::ClassSpawnAttributes()
 		if (!m_pPlayer->IsKnownClass(PLAYERCLASS_DOCTOR))
 		{
 			m_pPlayer->m_knownClass[PLAYERCLASS_DOCTOR] = true;
+		}
+		break;
+	case PLAYERCLASS_SIEGRID:
+		RemoveAllGun();
+		m_pPlayer->m_InfectionTick = -1;
+		m_Health = 10;
+		m_aWeapons[WEAPON_HAMMER].m_Got = false;
+		GiveWeapon(WEAPON_GUN, -1);
+		m_ActiveWeapon = WEAPON_GUN;
+
+		m_pHammer = new CSiegridHammer(GameWorld(), m_pPlayer->GetCID(), m_Pos);
+		m_LastSprintTick = -1;
+		m_LastTapMoveTick = -1;
+		m_LastMoveDirection = 0;
+		mem_zero(m_aHammerHitObjects, sizeof(m_aHammerHitObjects));
+
+		GameServer()->SendBroadcast_ClassIntro(0, m_pPlayer->GetCID(), PLAYERCLASS_SIEGRID);
+		if (!m_pPlayer->IsKnownClass(PLAYERCLASS_SIEGRID))
+		{
+			GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "Siegrid", NULL);
+			m_pPlayer->m_knownClass[PLAYERCLASS_SIEGRID] = true;
 		}
 		break;
 	case PLAYERCLASS_NONE:
@@ -5270,6 +5375,8 @@ int CCharacter::GetInfWeaponID(int WID)
 			return INFWEAPON_SCIENTIST_GUN;
 		case PLAYERCLASS_MAGICIAN:
 			return INFWEAPON_MAGICIAN_GUN;
+		case PLAYERCLASS_SIEGRID:
+			return INFWEAPON_SIEGRID_GUN;
 		default:
 			return INFWEAPON_GUN;
 		}

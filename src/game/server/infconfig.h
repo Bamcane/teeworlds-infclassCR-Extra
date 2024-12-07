@@ -107,6 +107,7 @@ MACRO_CONFIG_INT(InfEnablePolice, inf_enable_police, 1, 0, 1, CFGFLAG_SERVER, "M
 MACRO_CONFIG_INT(InfEnableMagician, inf_enable_magician, 1, 0, 1, CFGFLAG_SERVER, "Makes the magician class available")
 MACRO_CONFIG_INT(InfEnableJoker, inf_enable_joker, 1, 0, 1, CFGFLAG_SERVER, "Makes the joker class available")
 MACRO_CONFIG_INT(InfEnableDoctor, inf_enable_doctor, 1, 0, 1, CFGFLAG_SERVER, "Makes the doctor class available")
+MACRO_CONFIG_INT(InfEnableSiegrid, inf_enable_siegrid, 1, 0, 1, CFGFLAG_SERVER, "Makes the siegrid class available")
 
 MACRO_CONFIG_INT(InfMinEngineerPlayer, inf_min_engineer_player, 8, 0, 32, CFGFLAG_SERVER, "Min engineer need player num")
 MACRO_CONFIG_INT(InfMinDoctorPlayer1, inf_min_doctor_player_1, 8, 0, 64, CFGFLAG_SERVER, "How many players are required to choose doctor(for 1)")
@@ -208,6 +209,10 @@ MACRO_CONFIG_INT(InfStunGrenadeProbability, inf_stun_grenade_probability, 30, 0,
 
 MACRO_CONFIG_INT(InfFreezeMineMinimalKills, inf_freeze_mine_minimal_kills, 3, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before grenade stun ammunition can be found")
 MACRO_CONFIG_INT(InfJokerReviveNum, inf_joker_revive_num, 3, 0, 30, CFGFLAG_SERVER, "Max number of joker to revive")
+
+MACRO_CONFIG_INT(InfSiegridHammerLength, inf_siegrid_hammer_length, 280, 160, 1000, CFGFLAG_SERVER, "hammer length")
+MACRO_CONFIG_INT(InfSiegridSprintTimer, inf_siegrid_sprint_timer, 50, 0, 1000, CFGFLAG_SERVER, "sprint timer (in tick)")
+MACRO_CONFIG_INT(InfSiegridHammerType, inf_siegrid_hammer_type, 0, 0, 2, CFGFLAG_SERVER, "0 = sprint to mouse. 1 = fly to the tee, 2 = both")
 
 MACRO_CONFIG_INT(InfIgnoreSpec, inf_ignore_spec, 1, 0, 1, CFGFLAG_SERVER, "Ignore spectator number when set first infection (not count as infected)")
 #endif

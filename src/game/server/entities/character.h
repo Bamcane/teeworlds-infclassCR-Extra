@@ -40,6 +40,13 @@ enum
 {
 	GIFT_HEROFLAG=0,
 };
+
+enum ESiegridHammerType
+{
+	HAMMERTYPE_CURSOR = 0,
+	HAMMERTYPE_TEE = 1,
+	HAMMERTYPE_BOTH = 2,
+};
 /* INFECTION MODIFICATION END *****************************************/
 
 class CCharacter : public CEntity
@@ -164,6 +171,8 @@ public:
 	CCharacterCore m_Core;
 	CCharacterCore *m_pCore;
 	
+	int m_HammerType;
+
 private:
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -253,6 +262,19 @@ public:
 	vec2 m_JokerDirection;
 	bool m_FlagPut;
 	int m_ReviveNum;
+
+	// Siegrid
+	class CSiegridHammer *m_pHammer;
+	int m_LastSprintTick;
+	int m_LastTapMoveTick;
+	int m_LastMoveDirection;
+
+	struct CHitEntity
+	{
+		int m_LastHitTick;
+		CEntity *m_pEntity;
+	}m_aHammerHitObjects[10];
+
 public:
 	CCharacterCore GetCore() { return m_Core; }
 	CCharacterCore *Core() { return m_pCore; }

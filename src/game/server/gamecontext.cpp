@@ -188,6 +188,7 @@ const char *CGameContext::GetClassName(int Class)
 		case PLAYERCLASS_MAGICIAN: return ("Magician");break;
 		case PLAYERCLASS_JOKER: return ("Joker");break;
 		case PLAYERCLASS_DOCTOR: return ("Doctor");break;
+		case PLAYERCLASS_SIEGRID: return ("Siegrid"); break;
 		//Zombies
 		case PLAYERCLASS_SMOKER: return ("Smoker");break;
 		case PLAYERCLASS_BOOMER: return ("Boomer");break;
@@ -1972,6 +1973,14 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			{
 				m_apPlayers[ClientID]->HookProtection(!m_apPlayers[ClientID]->HookProtectionEnabled(), false);
 			}
+			else if(pMsg->m_Vote == -1 && g_Config.m_InfSiegridHammerType == ESiegridHammerType::HAMMERTYPE_BOTH && m_apPlayers[ClientID]->GetClass() == PLAYERCLASS_SIEGRID && GetPlayerChar(ClientID))
+			{
+				GetPlayerChar(ClientID)->m_HammerType = !GetPlayerChar(ClientID)->m_HammerType;
+				//const char *pMode = Server()->Localization()->Localize(Server()->GetClientLanguage(ClientID), GetPlayerChar(ClientID)->m_HammerType == ESiegridHammerType::HAMMERTYPE_TEE ? _("Self") : _("Cursor"));
+				const char *pMode = Server()->Localization()->Localize(Server()->GetClientLanguage(ClientID), GetPlayerChar(ClientID)->m_HammerType == ESiegridHammerType::HAMMERTYPE_TEE ? _("Hammer Mode: Self") : _("Hammer Mode: Cursor"));
+				SendBroadcast_Localization(2, ClientID, BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_GAMEANNOUNCE, pMode);
+				SendChatTarget_Localization(ClientID, CHATCATEGORY_PLAYER, pMode);
+			}
 		}
 		else if (MsgID == NETMSGTYPE_CL_SETTEAM && !m_World.m_Paused)
 		{
@@ -2903,6 +2912,7 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "mercenary") == 0) pPlayer->SetClass(PLAYERCLASS_MERCENARY);
 	else if(str_comp(pClassName, "sniper") == 0) pPlayer->SetClass(PLAYERCLASS_SNIPER);
 	else if(str_comp(pClassName, "doctor") == 0) pPlayer->SetClass(PLAYERCLASS_DOCTOR);
+	else if(str_comp(pClassName, "siegrid") == 0) pPlayer->SetClass(PLAYERCLASS_SIEGRID);
 	else if(str_comp(pClassName, "smoker") == 0) pPlayer->SetClass(PLAYERCLASS_SMOKER);
 	else if(str_comp(pClassName, "hunter") == 0) pPlayer->SetClass(PLAYERCLASS_HUNTER);
 	else if(str_comp(pClassName, "bat") == 0) pPlayer->SetClass(PLAYERCLASS_BAT);
@@ -3077,6 +3087,11 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 			{
 				CheckClass = PLAYERCLASS_REVIVER;
 				str_copy(aChatTitle, "reviver", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "!siegrid") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_SIEGRID;
+				str_copy(aChatTitle, "siegrid", sizeof(aChatTitle));
 			}
 			else if(str_comp(aNameFound, "!magician") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
@@ -3742,6 +3757,37 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Funnel made by ST-Chara(Flower)"), NULL); 
 
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
+		}
+		else if(str_comp_nocase(pHelpPage, "siegrid") == 0)
+		{
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Siegrid"), NULL); 
+			Buffer.append(" ~~\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Siegrid can use her gun to control a hammer."), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Causing damage to infected based on the speed of the hammer."), NULL); 
+			Buffer.append("\n");
+			if (g_Config.m_InfSiegridHammerType == ESiegridHammerType::HAMMERTYPE_BOTH)
+			{
+				pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("You can set the action mode of the hammer by pressing F4."), NULL);
+				Buffer.append("\n\n");
+				pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("There are 2 modes"), NULL);
+			}
+			if(g_Config.m_InfSiegridHammerType == ESiegridHammerType::HAMMERTYPE_BOTH || g_Config.m_InfSiegridHammerType == ESiegridHammerType::HAMMERTYPE_TEE)
+			{
+				Buffer.append("\n\n");
+				pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Hammer Mode - Self:"), NULL);
+				Buffer.append("\n");
+				pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("- The hammer will fly towards you when you are firing."), NULL);
+			}
+			if(g_Config.m_InfSiegridHammerType == ESiegridHammerType::HAMMERTYPE_BOTH || g_Config.m_InfSiegridHammerType == ESiegridHammerType::HAMMERTYPE_CURSOR)
+			{
+				Buffer.append("\n\n");
+				pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Hammer Mode - Cursor:"), NULL);
+				Buffer.append("\n");
+				pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("- When you firing, the hammer will fly towards your cursor."), NULL);
+			}			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
 		else if(str_comp_nocase(pHelpPage, "smoker") == 0)

@@ -425,6 +425,12 @@ void CPlayer::Snap(int SnappingClient)
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "nanas", sizeof(m_TeeInfos.m_SkinName));
 			break;
+		case PLAYERCLASS_SIEGRID:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "cammostripes", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 0;
+			m_TeeInfos.m_ColorFeet = 255;
+			break;
 		case PLAYERCLASS_SMOKER:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "cammostripes", sizeof(m_TeeInfos.m_SkinName));

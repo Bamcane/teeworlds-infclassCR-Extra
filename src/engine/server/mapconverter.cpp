@@ -690,9 +690,10 @@ void CMapConverter::Finalize()
 	int MagicianImageID = AddExternalImage("../skins/redbopp", 256, 128);
 	int JokerImageID = AddExternalImage("../skins/pinky", 256, 128);
 	int DoctorImageID = AddExternalImage("../skins/nanas", 256, 128);
+	int SiegridImageID = AddExternalImage("../skins/cammostripes", 256, 128);
 	//Menu
 	
-	const float MenuRadius = 280.0f;
+	const float MenuRadius = 300.0f;
 	const float MenuAngleStart = -pi/2.0f;
 	
 	{
@@ -786,6 +787,9 @@ void CMapConverter::Finalize()
 							break;
 						case MENUCLASS_SCIOGIST:
 							ClassMask = MASK_SCIOGIST;
+							break;
+						case MENUCLASS_SIEGRID:
+							ClassMask = MASK_SIEGRID;
 							break;
 						default:
 							ClassMask = MASK_SUPPORT;
@@ -969,6 +973,9 @@ void CMapConverter::Finalize()
 								break;
 							case MENUCLASS_DOCTOR:
 								AddTeeLayer("Doctor", DoctorImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+							case MENUCLASS_SIEGRID:
+								AddTeeLayer("Siegrid", SiegridImageID, Pos, 64.0f, m_NumEnvs - 1);
 								break;
 						}
 					}
