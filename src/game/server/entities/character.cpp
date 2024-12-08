@@ -5200,6 +5200,12 @@ void CCharacter::DestroyChildEntities()
 			continue;
 		GameServer()->m_World.DestroyEntity(pMine);
 	}
+	for(CSiegridHammer *pHammer = (CSiegridHammer *) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SIEGRID_HAMMER); pHammer; pHammer = (CSiegridHammer *) pHammer->TypeNext())
+	{
+		if(pHammer->GetOwner() != m_pPlayer->GetCID())
+			continue;
+		GameServer()->m_World.DestroyEntity(pHammer);
+	}
 
 	m_FirstShot = true;
 	m_HookMode = 0;

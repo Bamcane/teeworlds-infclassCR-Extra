@@ -1170,5 +1170,9 @@
 	{
 		"key": "Hammer Mode: Cursor",
 		"value": "链球模式：伸出"
+	},
+	{
+		"key": "Double-tap the move key could let her to sprint.",
+		"value": "双击移动键可以朝对应方向冲刺"
 	}
 ]}

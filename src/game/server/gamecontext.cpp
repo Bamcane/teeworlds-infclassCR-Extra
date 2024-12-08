@@ -3787,7 +3787,9 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 				pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Hammer Mode - Cursor:"), NULL);
 				Buffer.append("\n");
 				pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("- When you firing, the hammer will fly towards your cursor."), NULL);
-			}			
+			}
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Double-tap the move key could let her to sprint."), NULL);
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
 		else if(str_comp_nocase(pHelpPage, "smoker") == 0)
