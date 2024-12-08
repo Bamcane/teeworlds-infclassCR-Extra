@@ -251,8 +251,8 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_VoodooTimeAlive = Server()->TickSpeed() * g_Config.m_InfVoodooAliveTime;
 	m_pPlayer->SetToSpirit(false);
 
-	ClassSpawnAttributes();
 	DestroyChildEntities();
+	ClassSpawnAttributes();
 	GiveArmorIfLonely();
 	if (GetClass() == PLAYERCLASS_NONE)
 	{
@@ -5216,8 +5216,8 @@ void CCharacter::DestroyChildEntities()
 
 void CCharacter::SetClass(int ClassChoosed)
 {
-	ClassSpawnAttributes();
 	DestroyChildEntities();
+	ClassSpawnAttributes();
 	GiveArmorIfLonely();
 
 	m_QueuedWeapon = -1;
