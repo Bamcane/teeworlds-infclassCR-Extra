@@ -4749,3 +4749,8 @@ bool CGameContext::IsSnapPlayer(int ClientID)
 	}
 	return true;
 }
+
+bool CGameContext::IsAiming(int ClientID)
+{
+	return m_apPlayers[ClientID] ? m_apPlayers[ClientID]->IsAiming() : false;
+}

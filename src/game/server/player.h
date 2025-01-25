@@ -212,6 +212,9 @@ public:
 	void Logout();
 
 /* INFECTION MODIFICATION END *****************************************/
+
+	// Extra
+	bool IsAiming() { return m_PlayerFlags & PLAYERFLAG_AIM; };
 };
 
 enum

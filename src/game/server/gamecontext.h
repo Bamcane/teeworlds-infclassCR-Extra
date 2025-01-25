@@ -418,6 +418,9 @@ public:
 	bool IsSnapPlayer(int ClientID);
 	int m_SnapState;
 	// InfClassR end
+
+	// Extra
+	bool IsAiming(int ClientID);
 };
 
 inline int64_t CmaskAll() { return -1LL; }
