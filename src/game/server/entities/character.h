@@ -220,6 +220,7 @@ private:
 	CHeroFlag* m_pHeroFlag;
 
 public:
+	int m_ChargeTick; // ArisuAI
 	int m_PositionLockTick;
 	bool m_PositionLocked;
 	bool m_PositionLockAvailable;

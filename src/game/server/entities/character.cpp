@@ -35,6 +35,7 @@
 #include "slug-slime.h"
 #include "plasma.h"
 #include "plasma-plus.h"
+#include "flyingion.h"
 #include "freeze-mine.h"
 #include "growingexplosion.h"
 #include "white-hole.h"
@@ -720,6 +721,11 @@ void CCharacter::FireWeapon()
 			GameServer()->CreateSound(m_Pos, SOUND_WEAPON_NOAMMO);
 			m_LastNoAmmoSound = Server()->Tick();
 		}
+		return;
+	}
+
+	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_ARISUAI_RIFLE)
+	{
 		return;
 	}
 
@@ -2209,6 +2215,60 @@ void CCharacter::Tick()
 		m_Core.m_HookState = HOOK_IDLE;
 	}
 
+	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_ARISUAI_RIFLE)
+	{
+		if(m_LatestInput.m_Fire&1)
+		{
+			if(m_ChargeTick == (g_Config.m_InfIonBeamsChargeSec * Server()->TickSpeed() - 1))
+			{
+				const char *pMessage = nullptr;
+				switch(random_int(0, 5))
+				{
+					case 0: pMessage = "お掃除お掃除～おっ！準備完了です！"; break;
+					case 1: pMessage = "お掃除タイム～うん？行きます！"; break;
+					case 2: pMessage = "よいしょ～よいしょ~あれ？頑張ります！"; break;
+					case 3: pMessage = "魔力充電100パーセント…行きます！"; break;
+					case 4: pMessage = "ターゲット確認！出力臨界点突破！"; break;
+					case 5:
+					default: pMessage = "悪を撃ち砕く正義の一撃…"; break;
+				}
+				GameServer()->SendChat(m_pPlayer->GetCID(), CGameContext::CHAT_ALL, pMessage);
+			}
+			if((m_ChargeTick != g_Config.m_InfIonBeamsChargeSec * Server()->TickSpeed()) && (m_ChargeTick % 10) == 0)
+				GameServer()->CreateSound(m_Pos, SOUND_HOOK_NOATTACH);
+
+			m_ChargeTick = clamp(m_ChargeTick + 1, 0, g_Config.m_InfIonBeamsChargeSec * Server()->TickSpeed());
+		}
+		else if(m_ChargeTick)
+		{
+			int Num = (m_ChargeTick / (float)(g_Config.m_InfIonBeamsChargeSec * Server()->TickSpeed())) * 4;
+			if(Num == 4)
+			{
+				const char *pMessage = nullptr;
+				switch(random_int(0, 5))
+				{
+					case 0: pMessage = "ターゲット、ロックオン、光よ！"; break;
+					case 1: pMessage = "アリスの目からは逃げられません！"; break;
+					case 2: pMessage = "揺るがぬ意志で、光よ！"; break;
+					case 3: pMessage = "光よ！エナジーオーバーロード…リリース"; break;
+					case 4: pMessage = "アリス、全力で行きます！"; break;
+					case 5:
+					default: pMessage = "この光に意志を込めて…貫け！バランス崩壊！"; break;
+				}
+				GameServer()->SendChat(m_pPlayer->GetCID(), CGameContext::CHAT_ALL, pMessage);
+			}
+
+			if(Num)
+			{
+				vec2 Direction = normalize(vec2(m_LatestInput.m_TargetX, m_LatestInput.m_TargetY));
+				vec2 ProjStartPos = m_Pos + Direction * m_ProximityRadius * 0.75f;
+				new CFlyingIon(GameWorld(), ProjStartPos, Direction * 16.0f, m_pPlayer->GetCID(), Num);
+			}
+			m_ChargeTick = 0;
+			m_AttackTick = Server()->Tick();
+		}
+	}
+
 	if (m_MagicTick)
 	{
 		m_MagicTick--;
@@ -2590,6 +2650,11 @@ void CCharacter::Tick()
 				}
 			}
 		}
+
+		if(GameServer()->Collision()->TestBox(m_Pos + vec2(m_Core.m_Direction, 0), vec2(m_ProximityRadius, m_ProximityRadius)))
+		{
+			m_Core.m_Vel.y = -4.8f;
+		}
 	}
 
 	if(GetClass() == PLAYERCLASS_SIEGRID)
@@ -2870,6 +2935,13 @@ void CCharacter::Tick()
 						Broadcast = true;
 					}
 					break;
+				case CMapConverter::MENUCLASS_ARISUAI:
+					if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_ARISUAI))
+					{
+						GameServer()->SendBroadcast_Localization(LineBreak, m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("ArisuAI"), NULL);
+						Broadcast = true;
+					}
+					break;
 				}
 			}
 
@@ -2945,6 +3017,9 @@ void CCharacter::Tick()
 					break;
 				case CMapConverter::MENUCLASS_SIEGRID:
 					NewClass = PLAYERCLASS_SIEGRID;
+					break;
+				case CMapConverter::MENUCLASS_ARISUAI:
+					NewClass = PLAYERCLASS_ARISUAI;
 					break;
 				}
 
@@ -4800,6 +4875,22 @@ void CCharacter::ClassSpawnAttributes()
 			m_pPlayer->m_knownClass[PLAYERCLASS_SIEGRID] = true;
 		}
 		break;
+	case PLAYERCLASS_ARISUAI:
+		RemoveAllGun();
+		m_pPlayer->m_InfectionTick = -1;
+		m_Health = 10;
+		m_Armor = 10;
+		m_aWeapons[WEAPON_HAMMER].m_Got = false;
+		GiveWeapon(WEAPON_RIFLE, -1);
+		m_ActiveWeapon = WEAPON_RIFLE;
+
+		GameServer()->SendBroadcast_ClassIntro(0, m_pPlayer->GetCID(), PLAYERCLASS_ARISUAI);
+		if (!m_pPlayer->IsKnownClass(PLAYERCLASS_ARISUAI))
+		{
+			GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "ArisuAI", NULL);
+			m_pPlayer->m_knownClass[PLAYERCLASS_ARISUAI] = true;
+		}
+		break;
 	case PLAYERCLASS_NONE:
 		m_pPlayer->m_InfectionTick = -1;
 		m_Health = 10;
@@ -5017,6 +5108,21 @@ void CCharacter::ClassSpawnAttributes()
 			m_pPlayer->m_knownClass[PLAYERCLASS_NIGHTMARE] = true;
 		}
 		break;
+	case PLAYERCLASS_INFECTBOT:
+		m_Health = 10;
+		m_Armor = 20;
+		RemoveAllGun();
+		m_aWeapons[WEAPON_HAMMER].m_Got = true;
+		GiveWeapon(WEAPON_HAMMER, -1);
+		m_ActiveWeapon = WEAPON_HAMMER;
+
+		GameServer()->SendBroadcast_ClassIntro(0, m_pPlayer->GetCID(), PLAYERCLASS_INFECTBOT);
+		if (!m_pPlayer->IsKnownClass(PLAYERCLASS_INFECTBOT))
+		{
+			GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "infectbot", NULL);
+			m_pPlayer->m_knownClass[PLAYERCLASS_INFECTBOT] = true;
+		}
+		break;
 	}
 }
 
@@ -5205,6 +5311,12 @@ void CCharacter::DestroyChildEntities()
 		if(pHammer->GetOwner() != m_pPlayer->GetCID())
 			continue;
 		GameServer()->m_World.DestroyEntity(pHammer);
+	}
+	for(CFlyingIon *pFlyingIon = (CFlyingIon *) GameWorld()->FindFirst(CGameWorld::ENTTYPE_FLYINGION); pFlyingIon; pFlyingIon = (CFlyingIon *) pFlyingIon->TypeNext())
+	{
+		if(pFlyingIon->GetOwner() != m_pPlayer->GetCID())
+			continue;
+		GameServer()->m_World.DestroyEntity(pFlyingIon);
 	}
 
 	m_FirstShot = true;
@@ -5476,6 +5588,8 @@ int CCharacter::GetInfWeaponID(int WID)
 			return INFWEAPON_REVIVER_RIFLE;
 		case PLAYERCLASS_DOCTOR:
 			return INFWEAPON_DOCTOR_RIFLE;
+		case PLAYERCLASS_ARISUAI:
+			return INFWEAPON_ARISUAI_RIFLE;
 		default:
 			return INFWEAPON_RIFLE;
 		}

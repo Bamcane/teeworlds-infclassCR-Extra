@@ -189,6 +189,7 @@ const char *CGameContext::GetClassName(int Class)
 		case PLAYERCLASS_JOKER: return ("Joker");break;
 		case PLAYERCLASS_DOCTOR: return ("Doctor");break;
 		case PLAYERCLASS_SIEGRID: return ("Siegrid"); break;
+		case PLAYERCLASS_ARISUAI: return ("ArisuAI"); break;
 		//Zombies
 		case PLAYERCLASS_SMOKER: return ("Smoker");break;
 		case PLAYERCLASS_BOOMER: return ("Boomer");break;
@@ -204,6 +205,7 @@ const char *CGameContext::GetClassName(int Class)
 		case PLAYERCLASS_SLIME: return ("Slime");break;
 		case PLAYERCLASS_FREEZER: return ("Freezer");break;
 		case PLAYERCLASS_NIGHTMARE: return ("Nightmare");break;
+		case PLAYERCLASS_INFECTBOT: return ("InfectBot");break;
 		default: return ("Unknown class");break;
 	}
 }

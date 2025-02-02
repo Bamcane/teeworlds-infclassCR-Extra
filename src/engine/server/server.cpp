@@ -571,6 +571,8 @@ int CServer::Init()
 
 	SetFireDelay(INFWEAPON_SIEGRID_GUN, 1);
 
+	SetFireDelay(INFWEAPON_ARISUAI_RIFLE, 0);
+
 	SetAmmoRegenTime(INFWEAPON_NONE, 0);
 	SetAmmoRegenTime(INFWEAPON_HAMMER, 0);
 	SetAmmoRegenTime(INFWEAPON_SLIME_HAMMER, 0);
@@ -632,6 +634,8 @@ int CServer::Init()
 	SetAmmoRegenTime(INFWEAPON_DOCTOR_SHOTGUN, 100000);
 
 	SetAmmoRegenTime(INFWEAPON_SIEGRID_GUN, 0);
+
+	SetAmmoRegenTime(INFWEAPON_ARISUAI_RIFLE, 0);
 
 	SetMaxAmmo(INFWEAPON_NONE, -1);
 	SetMaxAmmo(INFWEAPON_HAMMER, -1);
@@ -696,6 +700,8 @@ int CServer::Init()
 
 	SetMaxAmmo(INFWEAPON_SIEGRID_GUN, -1);
 
+	SetMaxAmmo(INFWEAPON_ARISUAI_RIFLE, -1);
+
 	SetClassAvailability(PLAYERCLASS_ENGINEER, 2);
 	SetClassAvailability(PLAYERCLASS_SOLDIER, 2);
 	SetClassAvailability(PLAYERCLASS_MERCENARY, 2);
@@ -714,6 +720,7 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_JOKER, 2);
 	SetClassAvailability(PLAYERCLASS_DOCTOR, 2);
 	SetClassAvailability(PLAYERCLASS_SIEGRID, 2);
+	SetClassAvailability(PLAYERCLASS_ARISUAI, 2);
 
 	SetClassAvailability(PLAYERCLASS_SMOKER, 1);
 	SetClassAvailability(PLAYERCLASS_HUNTER, 1);
@@ -729,6 +736,7 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_SLIME, 1);
 	SetClassAvailability(PLAYERCLASS_FREEZER, 1);
 	SetClassAvailability(PLAYERCLASS_NIGHTMARE, 1);
+	SetClassAvailability(PLAYERCLASS_INFECTBOT, 0);
 	
 	m_InfClassChooser = 1;
 /* INFECTION MODIFICATION END *****************************************/

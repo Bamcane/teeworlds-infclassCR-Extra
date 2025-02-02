@@ -553,6 +553,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_SNIPER:
 				case PLAYERCLASS_MAGICIAN:
 				case PLAYERCLASS_JOKER:
+				case PLAYERCLASS_ARISUAI:
 					Support++;
 					break;
 				case PLAYERCLASS_ENGINEER:
@@ -950,6 +951,8 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 			case PLAYERCLASS_MERCENARY:
 			case PLAYERCLASS_SNIPER:
 			case PLAYERCLASS_MAGICIAN:
+			case PLAYERCLASS_JOKER:
+			case PLAYERCLASS_ARISUAI:
 				nbSupport++;
 				break;
 			case PLAYERCLASS_MEDIC:
@@ -1018,6 +1021,9 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 		1.0f : 0.0f;
 	Probability[PLAYERCLASS_NINJA - START_HUMANCLASS - 1] =
 		(nbSupport < g_Config.m_InfSupportLimit && g_Config.m_InfEnableNinja) ?
+		1.0f : 0.0f;
+	Probability[PLAYERCLASS_ARISUAI - START_HUMANCLASS - 1] =
+		(nbSupport < g_Config.m_InfSupportLimit && g_Config.m_InfEnableArisuAI) ?
 		1.0f : 0.0f;
 
 	Probability[PLAYERCLASS_MEDIC - START_HUMANCLASS - 1] =
@@ -1124,6 +1130,7 @@ int CGameControllerMOD::ChooseInfectedClass(const CPlayer *pPlayer) const
 	Probability[PLAYERCLASS_NIGHTMARE - START_INFECTEDCLASS - 1] =
 		(Server()->GetClassAvailability(PLAYERCLASS_NIGHTMARE)) ?
 		(double) g_Config.m_InfProbaNightmare : 0.0f;
+	Probability[PLAYERCLASS_INFECTBOT - START_INFECTEDCLASS - 1] = 0.0f;
 	
 	Probability[PLAYERCLASS_WITCH - START_INFECTEDCLASS - 1] =
 		(Server()->GetClassAvailability(PLAYERCLASS_WITCH) && nbInfected > 2 && !thereIsAWitch) ?
@@ -1184,6 +1191,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnableDoctor;
 		case PLAYERCLASS_SIEGRID:
 			return g_Config.m_InfEnableSiegrid;
+		case PLAYERCLASS_ARISUAI:
+			return g_Config.m_InfEnableArisuAI;
 		default:
 			return false;
 	}
@@ -1214,6 +1223,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_SNIPER:
 			case PLAYERCLASS_MAGICIAN:
 			case PLAYERCLASS_JOKER:
+			case PLAYERCLASS_ARISUAI:
 				nbSupport++;
 				break;
 			case PLAYERCLASS_MEDIC:
@@ -1266,6 +1276,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		case PLAYERCLASS_SNIPER:
 		case PLAYERCLASS_MAGICIAN:
 		case PLAYERCLASS_JOKER:
+		case PLAYERCLASS_ARISUAI:
 			return (nbSupport < g_Config.m_InfSupportLimit);
 		case PLAYERCLASS_LOOPER:
 			return (nbDefender < g_Config.m_InfDefenderLimit);

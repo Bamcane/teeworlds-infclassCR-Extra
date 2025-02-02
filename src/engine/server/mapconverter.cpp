@@ -691,6 +691,7 @@ void CMapConverter::Finalize()
 	int JokerImageID = AddExternalImage("../skins/pinky", 256, 128);
 	int DoctorImageID = AddExternalImage("../skins/nanas", 256, 128);
 	int SiegridImageID = AddExternalImage("../skins/cammostripes", 256, 128);
+	int ArisuAIImageID = AddExternalImage("../skins/blacktee", 256, 128);
 	//Menu
 	
 	const float MenuRadius = 300.0f;
@@ -976,6 +977,9 @@ void CMapConverter::Finalize()
 								break;
 							case MENUCLASS_SIEGRID:
 								AddTeeLayer("Siegrid", SiegridImageID, Pos, 64.0f, m_NumEnvs - 1);
+								break;
+							case MENUCLASS_ARISUAI:
+								AddTeeLayer("ArisuAI", ArisuAIImageID, Pos, 64.0f, m_NumEnvs - 1);
 								break;
 						}
 					}

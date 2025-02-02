@@ -431,6 +431,10 @@ void CPlayer::Snap(int SnappingClient)
 			m_TeeInfos.m_ColorBody = 0;
 			m_TeeInfos.m_ColorFeet = 255;
 			break;
+		case PLAYERCLASS_ARISUAI:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "blacktee", sizeof(m_TeeInfos.m_SkinName));
+			break;
 		case PLAYERCLASS_SMOKER:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "cammostripes", sizeof(m_TeeInfos.m_SkinName));
@@ -541,6 +545,12 @@ void CPlayer::Snap(int SnappingClient)
 				m_TeeInfos.m_ColorBody = 3866368;
 				m_TeeInfos.m_ColorFeet = 65414;
 			}
+			break;
+		case PLAYERCLASS_INFECTBOT:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "beast", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 8257280;
+			m_TeeInfos.m_ColorFeet = 65414;
 			break;
 		default:
 			m_TeeInfos.m_UseCustomColor = 0;
@@ -875,10 +885,16 @@ void CPlayer::StartInfection(bool force)
 	{
 		m_InfectionTick = Server()->Tick();
 	}
-	
-	int c = GameServer()->m_pController->ChooseInfectedClass(this);
-	
-	SetClass(c);
+
+	if(m_Class == PLAYERCLASS_ARISUAI)
+	{
+		SetClass(PLAYERCLASS_INFECTBOT);
+	}
+	else
+	{
+		int c = GameServer()->m_pController->ChooseInfectedClass(this);
+		SetClass(c);
+	}
 }
 
 bool CPlayer::IsZombie() const
