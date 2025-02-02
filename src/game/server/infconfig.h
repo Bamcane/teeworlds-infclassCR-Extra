@@ -215,8 +215,8 @@ MACRO_CONFIG_INT(InfSiegridHammerLength, inf_siegrid_hammer_length, 280, 160, 10
 MACRO_CONFIG_INT(InfSiegridSprintTimer, inf_siegrid_sprint_timer, 50, 0, 1000, CFGFLAG_SERVER, "sprint timer (in tick)")
 MACRO_CONFIG_INT(InfSiegridHammerType, inf_siegrid_hammer_type, 0, 0, 2, CFGFLAG_SERVER, "0 = sprint to mouse. 1 = fly to the tee, 2 = both")
 
-MACRO_CONFIG_INT(InfFlyingIonAliveSec, inf_flyingion_alive_sec, 5, 5, 10, CFGFLAG_SERVER, "alive time in seconds")
-MACRO_CONFIG_INT(InfIonBeamsChargeSec, inf_ionbeams_charge_sec, 5, 5, 10, CFGFLAG_SERVER, "charge time in seconds")
+MACRO_CONFIG_INT(InfFlyingIonAliveSec, inf_flyingion_alive_sec, 3, 3, 10, CFGFLAG_SERVER, "alive time in seconds")
+MACRO_CONFIG_INT(InfIonBeamsChargeSec, inf_ionbeams_charge_sec, 8, 5, 10, CFGFLAG_SERVER, "charge time in seconds")
 
 MACRO_CONFIG_INT(InfIgnoreSpec, inf_ignore_spec, 1, 0, 1, CFGFLAG_SERVER, "Ignore spectator number when set first infection (not count as infected)")
 #endif
