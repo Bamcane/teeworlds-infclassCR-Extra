@@ -1959,6 +1959,9 @@ void CCharacter::HandleWeapons()
 			m_aWeapons[i].m_ReloadTimer--;
 	}
 
+	if (m_aWeapons[m_ActiveWeapon].m_ReloadTimer && g_Config.m_InfReloadTimerBug)
+		m_aWeapons[m_ActiveWeapon].m_ReloadTimer--;
+
 	// fire Weapon, if wanted
 	FireWeapon();
 
@@ -2272,7 +2275,7 @@ void CCharacter::Tick()
 			{
 				vec2 Direction = normalize(vec2(m_LatestInput.m_TargetX, m_LatestInput.m_TargetY));
 				vec2 ProjStartPos = m_Pos + Direction * m_ProximityRadius * 0.75f;
-				new CFlyingIon(GameWorld(), ProjStartPos, Direction * 16.0f, m_pPlayer->GetCID(), Num);
+				new CFlyingIon(GameWorld(), ProjStartPos, Direction * 8.0f, m_pPlayer->GetCID(), Num);
 				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 			}
 			m_ChargeTick = 0;
@@ -3926,6 +3929,12 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	{
 		Dmg = 11;
 		// A zombie can't infect siegrid
+		Mode = TAKEDAMAGEMODE_NOINFECTION;
+	}
+
+	if(GetClass() == PLAYERCLASS_ARISUAI && Mode == TAKEDAMAGEMODE_INFECTION)
+	{
+		Dmg = 5;
 		Mode = TAKEDAMAGEMODE_NOINFECTION;
 	}
 
