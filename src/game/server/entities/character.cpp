@@ -5110,8 +5110,8 @@ void CCharacter::ClassSpawnAttributes()
 		}
 		break;
 	case PLAYERCLASS_INFECTBOT:
-		m_Health = 10;
-		m_Armor = 20;
+		m_Health = 20;
+		m_Armor = 10;
 		RemoveAllGun();
 		m_aWeapons[WEAPON_HAMMER].m_Got = true;
 		GiveWeapon(WEAPON_HAMMER, -1);
