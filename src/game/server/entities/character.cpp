@@ -2231,8 +2231,8 @@ void CCharacter::Tick()
 						case 4: pMessage = "ターゲット確認！出力臨界点突破！"; break;
 						default: pMessage = "悪を撃ち砕く正義の一撃…"; break;
 					}
+					GameServer()->SendChat(m_pPlayer->GetCID(), CGameContext::CHAT_ALL, pMessage);
 				}
-				GameServer()->SendChat(m_pPlayer->GetCID(), CGameContext::CHAT_ALL, pMessage);
 				GameServer()->SendBroadcast_Localization(0, m_pPlayer->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, _("Charging completed!"));
 			}
 			if((m_ChargeTick != g_Config.m_InfIonBeamsCharge) && (m_ChargeTick % 10) == 0)
