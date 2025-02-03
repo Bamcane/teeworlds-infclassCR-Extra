@@ -68,6 +68,8 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_AccData.m_UserID = 0;
 	LoggedIn = false;
 	#endif
+
+	m_ArisuMsg = false;
 /* INFECTION MODIFICATION END *****************************************/
 }
 

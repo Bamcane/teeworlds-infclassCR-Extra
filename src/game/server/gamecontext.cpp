@@ -4356,6 +4356,23 @@ bool CGameContext::ConWitch(IConsole::IResult *pResult, void *pUserData)
 	return true;
 }
 
+bool CGameContext::ConArisuMsg(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *)pUserData;
+	int ClientID = pResult->GetClientID();
+	if (!pSelf->m_apPlayers[ClientID])
+		return false;
+
+	int Arg = pResult->GetInteger(0);
+
+	if(Arg > 0)
+		pSelf->m_apPlayers[ClientID]->m_ArisuMsg = true;
+	else
+		pSelf->m_apPlayers[ClientID]->m_ArisuMsg = false;
+	
+	return true;
+}
+
 /* INFECTION MODIFICATION END *****************************************/
 
 void CGameContext::OnConsoleInit()
@@ -4406,6 +4423,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("language", "s<en|fr|nl|de|bg|sr-Latn|hr|cs|pl|uk|ru|el|la|it|es|pt|hu|ar|tr|sah|fa|tl|zh-Hans|ja>", CFGFLAG_CHAT|CFGFLAG_USER, ConLanguage, this, "Display information about the mod");
 	Console()->Register("cmdlist", "", CFGFLAG_CHAT|CFGFLAG_USER, ConCmdList, this, "List of commands");
 	Console()->Register("witch", "", CFGFLAG_CHAT|CFGFLAG_USER, ConWitch, this, "Call Witch");
+	Console()->Register("arisumsg", "i<0|1>", CFGFLAG_CHAT|CFGFLAG_USER, ConArisuMsg, this, "Auto send msg(SPAM!!!)");
 /* INFECTION MODIFICATION END *****************************************/
 
 	Console()->Chain("sv_motd", ConchainSpecialMotdupdate, this);

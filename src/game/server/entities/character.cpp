@@ -2219,16 +2219,18 @@ void CCharacter::Tick()
 		{
 			if(m_ChargeTick == (g_Config.m_InfIonBeamsCharge - 1))
 			{
-				const char *pMessage = nullptr;
-				switch(random_int(0, 5))
+				if(m_pPlayer->m_ArisuMsg)
 				{
-					case 0: pMessage = "お掃除お掃除～おっ！準備完了です！"; break;
-					case 1: pMessage = "お掃除タイム～うん？行きます！"; break;
-					case 2: pMessage = "よいしょ～よいしょ~あれ？頑張ります！"; break;
-					case 3: pMessage = "魔力充電100パーセント…行きます！"; break;
-					case 4: pMessage = "ターゲット確認！出力臨界点突破！"; break;
-					case 5:
-					default: pMessage = "悪を撃ち砕く正義の一撃…"; break;
+					const char *pMessage = nullptr;
+					switch(random_int(0, 5))
+					{
+						case 0: pMessage = "お掃除お掃除～おっ！準備完了です！"; break;
+						case 1: pMessage = "お掃除タイム～うん？行きます！"; break;
+						case 2: pMessage = "よいしょ～よいしょ~あれ？頑張ります！"; break;
+						case 3: pMessage = "魔力充電100パーセント…行きます！"; break;
+						case 4: pMessage = "ターゲット確認！出力臨界点突破！"; break;
+						default: pMessage = "悪を撃ち砕く正義の一撃…"; break;
+					}
 				}
 				GameServer()->SendChat(m_pPlayer->GetCID(), CGameContext::CHAT_ALL, pMessage);
 				GameServer()->SendBroadcast_Localization(0, m_pPlayer->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, _("Charging completed!"));
@@ -2251,7 +2253,7 @@ void CCharacter::Tick()
 		}
 		else if(m_ChargeTick)
 		{
-			if(Num == 4)
+			if(Num == 4 && m_pPlayer->m_ArisuMsg)
 			{
 				const char *pMessage = nullptr;
 				switch(random_int(0, 5))
@@ -2261,7 +2263,6 @@ void CCharacter::Tick()
 					case 2: pMessage = "揺るがぬ意志で、光よ！"; break;
 					case 3: pMessage = "光よ！エナジーオーバーロード…リリース"; break;
 					case 4: pMessage = "アリス、全力で行きます！"; break;
-					case 5:
 					default: pMessage = "この光に意志を込めて…貫け！バランス崩壊！"; break;
 				}
 				GameServer()->SendChat(m_pPlayer->GetCID(), CGameContext::CHAT_ALL, pMessage);
