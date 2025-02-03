@@ -1174,5 +1174,45 @@
 	{
 		"key": "Double-tap the move key could let her to sprint.",
 		"value": "双击移动键可以朝对应方向冲刺"
+	},
+	{
+		"key": "ArisuAI",
+		"value": "爱丽丝AI"
+	},
+	{
+		"key": "A mass-produced robot designed to mimic the design of the Tendou Arisu.",
+		"value": "是模仿天童爱丽丝设计的量产型机器人"
+	},
+	{
+		"key": "She possesses the Ionbeams and requires {sec:time} time to fully charge it",
+		"value": "她拥有光之剑·离子束，需要{sec:time}的时间充能到最大，"
+	},
+	{
+		"key": "When fully charged, she will unconsciously make a battle readiness declaration",
+		"value": "当充能到最大时，她会不自觉说出战斗准备宣言，"
+	},
+	{
+		"key": "and make a battle declaration after releasing energy.",
+		"value": "并在释放能量后说出战斗宣言"
+	},
+	{
+		"key": "At least it needs to be charged to a certain extent to release energy before emitting the ion beam",
+		"value": "至少需要充能到一定程度释放能量才能发射离子束，"
+	},
+	{
+		"key": "The ion beam lasts {sec:lifespan} and has a maximum radius of about four grids, causing significant damage to enemies.",
+		"value": "离子束持续{sec:lifespan}，最大半径4格，会对敌人造成大量伤害。"
+	},
+	{
+		"key": "Charging completed!",
+		"value": "充能完毕!"
+	},
+	{
+		"key": "Charging in progress {int:progress}%\nPower: {int:num}/4",
+		"value": "充能中 : {int:progress}%\n等级: {int:num}/4"
+	},
+	{
+		"key": "Charging completed! Release to fire!",
+		"value": "充电完成！松手释放！"
 	}
 ]}

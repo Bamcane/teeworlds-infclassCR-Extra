@@ -19,7 +19,7 @@ void CFlyingIon::Tick()
 {
     vec2 OldPos = m_Pos;
 	m_Pos += m_Vel;
-    if(GameServer()->Collision()->IntersectLine(OldPos, m_Pos, nullptr, nullptr) || m_StartTick + g_Config.m_InfFlyingIonAliveSec * Server()->TickSpeed() < Server()->Tick())
+    if(GameServer()->Collision()->IntersectLine(OldPos, m_Pos, nullptr, nullptr) || m_StartTick + g_Config.m_InfFlyingIonLifespan < Server()->Tick())
     {
         GameWorld()->DestroyEntity(this);
         return;

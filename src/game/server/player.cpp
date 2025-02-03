@@ -870,31 +870,27 @@ int CPlayer::GetOldClass()
 		return m_ClassOld;
 }
 
-void CPlayer::SetOldClass(int oldClass)
+void CPlayer::SetOldClass(int OldClass)
 {
-	m_ClassOld = oldClass;
+	m_ClassOld = OldClass;
 }
 
-void CPlayer::StartInfection(bool force)
+void CPlayer::StartInfection(bool Force)
 {
-	if(!force && IsZombie())
+	if(!Force && IsZombie())
 		return;
 	
 	
 	if(IsHuman())
-	{
 		m_InfectionTick = Server()->Tick();
-	}
 
-	if(m_Class == PLAYERCLASS_ARISUAI)
-	{
-		SetClass(PLAYERCLASS_INFECTBOT);
-	}
-	else
+	if(m_Class != PLAYERCLASS_ARISUAI)
 	{
 		int c = GameServer()->m_pController->ChooseInfectedClass(this);
 		SetClass(c);
 	}
+	else
+		SetClass(PLAYERCLASS_INFECTBOT);
 }
 
 bool CPlayer::IsZombie() const

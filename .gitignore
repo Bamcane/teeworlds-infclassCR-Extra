@@ -37,3 +37,5 @@ build.ninja
 libengine-shared.a
 libgame-shared.a
 libGeoLite2PP.a
+
+build/

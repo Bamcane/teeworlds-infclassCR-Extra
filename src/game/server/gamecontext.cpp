@@ -3794,6 +3794,26 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Double-tap the move key could let her to sprint."), NULL);
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
+		else if(str_comp_nocase(pHelpPage, "ArisuAI") == 0)
+		{
+			int Time = (float(g_Config.m_InfIonBeamsCharge) / pSelf->Server()->TickSpeed());
+			int Lifespan = g_Config.m_InfFlyingIonLifespan / pSelf->Server()->TickSpeed();
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("ArisuAI"), NULL); 
+			Buffer.append("~~\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("A mass-produced robot designed to mimic the design of the Tendou Arisu."), NULL); 
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("She possesses the Ionbeams and requires {sec:time} time to fully charge it"), "time", &Time, NULL); 
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("When fully charged, she will unconsciously make a battle readiness declaration"), NULL);
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("and make a battle declaration after releasing energy."), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("At least it needs to be charged to a certain extent to release energy before emitting the ion beam"), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The ion beam lasts {sec:lifespan} and has a maximum radius of about four grids, causing significant damage to enemies."), "lifespan", &Lifespan, NULL);
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
+		}
 		else if(str_comp_nocase(pHelpPage, "smoker") == 0)
 		{
 			Buffer.append("~~ ");

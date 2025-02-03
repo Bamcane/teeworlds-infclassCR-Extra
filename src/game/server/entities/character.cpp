@@ -2186,15 +2186,12 @@ void CCharacter::Tick()
 	//~ }
 	//~ else
 	//~ m_InWater = 0;
+
 	// Delayed Death
 	if (GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive > 0)
-	{
 		m_VoodooTimeAlive -= 1000;
-	}
 	else if (GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive <= 0)
-	{
 		Die(m_VoodooKiller, m_VoodooWeapon);
-	}
 
 	// Display time left to live
 	if (GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie)
@@ -2209,17 +2206,18 @@ void CCharacter::Tick()
 	if (GetClass() == PLAYERCLASS_SNIPER && m_PositionLocked)
 	{
 		if (m_Input.m_Jump && !m_PrevInput.m_Jump)
-		{
 			m_PositionLocked = false;
-		}
+
 		m_Core.m_HookState = HOOK_IDLE;
 	}
 
 	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_ARISUAI_RIFLE)
 	{
+		// Be careful! 50 / 400 equal 0, But 50 / 400.f equal 0.125f!
+		int Num = (m_ChargeTick / float(g_Config.m_InfIonBeamsCharge)) * 4;
 		if(m_LatestInput.m_Fire&1)
 		{
-			if(m_ChargeTick == (g_Config.m_InfIonBeamsChargeSec * Server()->TickSpeed() - 1))
+			if(m_ChargeTick == (g_Config.m_InfIonBeamsCharge - 1))
 			{
 				const char *pMessage = nullptr;
 				switch(random_int(0, 5))
@@ -2233,15 +2231,26 @@ void CCharacter::Tick()
 					default: pMessage = "悪を撃ち砕く正義の一撃…"; break;
 				}
 				GameServer()->SendChat(m_pPlayer->GetCID(), CGameContext::CHAT_ALL, pMessage);
+				GameServer()->SendBroadcast_Localization(0, m_pPlayer->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, _("Charging completed!"));
 			}
-			if((m_ChargeTick != g_Config.m_InfIonBeamsChargeSec * Server()->TickSpeed()) && (m_ChargeTick % 10) == 0)
+			if((m_ChargeTick != g_Config.m_InfIonBeamsCharge) && (m_ChargeTick % 10) == 0)
 				GameServer()->CreateSound(m_Pos, SOUND_HOOK_NOATTACH);
 
-			m_ChargeTick = clamp(m_ChargeTick + 1, 0, g_Config.m_InfIonBeamsChargeSec * Server()->TickSpeed());
+			if(g_Config.m_InfIonBeamsCharge != m_ChargeTick)
+			{
+				int Progress = int((float(m_ChargeTick) / float(g_Config.m_InfIonBeamsCharge)) * 100);
+				GameServer()->SendBroadcast_Localization(0, m_pPlayer->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, _("Charging in progress {int:progress}%\nPower: {int:num}/4"), "progress", &Progress, "num", &Num);
+			}
+			else
+				GameServer()->SendBroadcast_Localization(0, m_pPlayer->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, _("Charging completed! Release to fire!"));
+
+			if (m_ChargeTick == g_Config.m_InfIonBeamsCharge - 1)
+				GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE, m_pPlayer->GetCID());
+
+			m_ChargeTick = clamp(m_ChargeTick + 1, 0, g_Config.m_InfIonBeamsCharge);
 		}
 		else if(m_ChargeTick)
 		{
-			int Num = (m_ChargeTick / (float)(g_Config.m_InfIonBeamsChargeSec * Server()->TickSpeed())) * 4;
 			if(Num == 4)
 			{
 				const char *pMessage = nullptr;
@@ -2263,6 +2272,7 @@ void CCharacter::Tick()
 				vec2 Direction = normalize(vec2(m_LatestInput.m_TargetX, m_LatestInput.m_TargetY));
 				vec2 ProjStartPos = m_Pos + Direction * m_ProximityRadius * 0.75f;
 				new CFlyingIon(GameWorld(), ProjStartPos, Direction * 16.0f, m_pPlayer->GetCID(), Num);
+				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 			}
 			m_ChargeTick = 0;
 			m_AttackTick = Server()->Tick();
@@ -2391,9 +2401,7 @@ void CCharacter::Tick()
 	}
 
 	if (m_ReslowlyTick > 0)
-	{
 		m_ReslowlyTick--;
-	}
 
 	if (m_SlowMotionTick > 0)
 	{
@@ -2457,14 +2465,10 @@ void CCharacter::Tick()
 			m_Poison--;
 			TakeDamage(vec2(0.0f, 0.0f), 1, m_PoisonFrom, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
 			if (m_Poison > 0)
-			{
 				m_PoisonTick = Server()->TickSpeed() / 2;
-			}
 		}
 		else
-		{
 			m_PoisonTick--;
-		}
 	}
 
 	// NeedHeal
@@ -2472,13 +2476,9 @@ void CCharacter::Tick()
 		m_NeedFullHeal = false;
 
 	if (!m_InWater && !IsGrounded() && (m_Core.m_HookState != HOOK_GRABBED || m_Core.m_HookedPlayer != -1))
-	{
 		m_InAirTick++;
-	}
 	else
-	{
 		m_InAirTick = 0;
-	}
 
 	// Ghost and Nightmare
 	if (GetClass() == PLAYERCLASS_GHOST || GetClass() == PLAYERCLASS_NIGHTMARE)
@@ -5128,14 +5128,9 @@ void CCharacter::ClassSpawnAttributes()
 
 void CCharacter::GiveArmorIfLonely()
 {
-	if (IsZombie())
-	{
-		if (GameServer()->GetZombieCount() <= 1)
-		{
-			/* Lonely zombie */
-			IncreaseArmor(10);
-		}
-	}
+	/* Lonely zombie */
+	if (IsZombie() && GameServer()->GetZombieCount() <= 1)
+		IncreaseArmor(10);
 }
 
 void CCharacter::DestroyChildEntities()
