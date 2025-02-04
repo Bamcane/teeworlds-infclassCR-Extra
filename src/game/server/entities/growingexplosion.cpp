@@ -71,13 +71,13 @@ CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir,
 	{
 		case GROWINGEXPLOSIONEFFECT_FREEZE_INFECTED:
 		case GROWINGEXPLOSIONEFFECT_FREEZE_HUMAN:
-			if(random_prob(0.1f))
+			if(random_prob(0.05f))
 			{
 				GameServer()->CreateHammerHit(m_SeedPos);
 			}
 			break;
 		case GROWINGEXPLOSIONEFFECT_POISON_INFECTED:
-			if(random_prob(0.1f))
+			if(random_prob(0.05f))
 			{
 				GameServer()->CreateDeath(m_SeedPos, m_Owner);
 			}
@@ -152,19 +152,19 @@ void CGrowingExplosion::Tick()
 					{
 						case GROWINGEXPLOSIONEFFECT_FREEZE_INFECTED:
 						case GROWINGEXPLOSIONEFFECT_FREEZE_HUMAN:
-							if(random_prob(0.1f))
+							if(random_prob(0.05f))
 							{
 								GameServer()->CreateHammerHit(TileCenter);
 							}
 							break;
 						case GROWINGEXPLOSIONEFFECT_POISON_INFECTED:
-							if(random_prob(0.1f))
+							if(random_prob(0.05f))
 							{
 								GameServer()->CreateDeath(TileCenter, m_Owner);
 							}
 							break;
 						case GROWINGEXPLOSIONEFFECT_HEAL_HUMANS:
-							if(random_prob(0.1f))
+							if(random_prob(0.05f))
 							{
 								GameServer()->CreateDeath(TileCenter, m_Owner);
 							}
@@ -223,7 +223,7 @@ void CGrowingExplosion::Tick()
 									GameServer()->CreateLaserDotEvent(StartPoint, EndPoint, Server()->TickSpeed()/6);
 								}
 								
-								if(random_prob(0.1f))
+								if(random_prob(0.05f))
 								{
 									GameServer()->CreateSound(EndPoint, SOUND_RIFLE_BOUNCE);
 								}
@@ -240,7 +240,7 @@ void CGrowingExplosion::Tick()
 		switch(m_ExplosionEffect)
 		{
 			case GROWINGEXPLOSIONEFFECT_POISON_INFECTED:
-				if(random_prob(0.1f))
+				if(random_prob(0.05f))
 				{
 					GameServer()->CreateSound(m_Pos, SOUND_PLAYER_DIE);
 				}

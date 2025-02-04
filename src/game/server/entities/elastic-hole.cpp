@@ -158,6 +158,7 @@ void CElasticHole::Snap(int SnappingClient)
 		}
 	}
 	
+	/*
 	CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_AmmoIDs[4], sizeof(CNetObj_Projectile)));
 	if(pObj)
 	{
@@ -184,6 +185,6 @@ void CElasticHole::Snap(int SnappingClient)
 		}
 		Angle += 90;
 	}
-
+	*/
 	
 }

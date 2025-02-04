@@ -11,8 +11,8 @@ class CMercenaryBomb : public CEntity
 public:
 	enum
 	{
-		NUM_SIDE = 12,
-		NUM_HINT = 12,
+		NUM_SIDE = 8,
+		NUM_HINT = 8,
 		NUM_IDS = NUM_SIDE + NUM_HINT,
 	};
 	

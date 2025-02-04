@@ -171,7 +171,8 @@ void CLooperWall::Snap(int SnappingClient)
 	}
 
 	// draw particles inside wall
-	if(!Server()->GetClientAntiPing(SnappingClient))
+	// if(!Server()->GetClientAntiPing(SnappingClient))
+	if(false)
 	{
 		vec2 startPos = vec2(m_Pos2.x+dirVecT.x, m_Pos2.y+dirVecT.y);
 		dirVecT.x = -dirVecT.x*2.0f;

@@ -8,7 +8,7 @@ class CPoliceShield : public CEntity
 public:
 	enum
 	{
-		NUM_IDS = 6,
+		NUM_IDS = 5,
 	};
 public:
 	CPoliceShield(CGameWorld *pGameWorld, int Owner);

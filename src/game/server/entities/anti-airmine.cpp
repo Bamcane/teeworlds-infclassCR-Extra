@@ -91,7 +91,8 @@ void CAntiAirMine::Snap(int SnappingClient)
 		
 		m_LaserPos[i] = EndPos;
 
-		if(!Server()->GetClientAntiPing(SnappingClient))
+		//if(!Server()->GetClientAntiPing(SnappingClient))
+		if(false)
 		{
 			vec2 AmmoPos = m_Pos + (GetDir((Angle + 180 / NUM_LASERS )*pi/180) * Radius);
 			CNetObj_Projectile *pPro = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_AmmoIDs[i], sizeof(CNetObj_Projectile)));

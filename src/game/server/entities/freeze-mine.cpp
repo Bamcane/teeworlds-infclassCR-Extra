@@ -12,20 +12,24 @@ CFreezeMine::CFreezeMine(CGameWorld *pGameWorld, vec2 Pos, int Owner, float Radi
     m_Owner = Owner;
     m_Radius = Radius;
     m_StartTick = Server()->Tick();
-    m_IDs.set_size(9);
+    /*
+	m_IDs.set_size(8);
 	for(int i = 0; i < m_IDs.size(); i++)
 	{
 		m_IDs[i] = Server()->SnapNewID();
 	}
+	*/
     GameWorld()->InsertEntity(this);
 }
 
 CFreezeMine::~CFreezeMine()
 {
+    /*
 	for(int i = 0; i < m_IDs.size(); i++)
 	{
 		Server()->SnapFreeID(m_IDs[i]);
 	}
+	*/
 }
 
 void CFreezeMine::Reset()
@@ -80,12 +84,13 @@ void CFreezeMine::Snap(int SnappingClient)
         return;
 
 
+	/*
 	float time = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	float angle = fmodf(time*pi/2, 2.0f*pi);
 	
-	for(int i=0; i<m_IDs.size()-1; i++)
+	for(int i=0; i<m_IDs.size(); i++)
 	{	
-		float shiftedAngle = angle + 2.0*pi*static_cast<float>(i)/static_cast<float>(m_IDs.size()-1);
+		float shiftedAngle = angle + 2.0*pi*static_cast<float>(i)/static_cast<float>(m_IDs.size());
 		
 		CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_IDs[i], sizeof(CNetObj_Projectile)));
 		
@@ -98,8 +103,9 @@ void CFreezeMine::Snap(int SnappingClient)
 		pObj->m_VelY = 0;
 		pObj->m_StartTick = Server()->Tick();
 	}
+	*/
 	
-	CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_IDs[m_IDs.size()-1], sizeof(CNetObj_Projectile)));
+	CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_ID, sizeof(CNetObj_Projectile)));
 	
 	if(!pObj)
 		return;

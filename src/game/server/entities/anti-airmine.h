@@ -11,7 +11,7 @@ class CAntiAirMine : public CEntity
 public:
     enum
     {
-        NUM_LASERS = 6,
+        NUM_LASERS = 4,
         NUM_AMMOS = NUM_LASERS,
         NUM_IDS = NUM_LASERS + NUM_AMMOS
     };
