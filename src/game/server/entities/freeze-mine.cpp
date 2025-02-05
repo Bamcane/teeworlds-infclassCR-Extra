@@ -12,24 +12,16 @@ CFreezeMine::CFreezeMine(CGameWorld *pGameWorld, vec2 Pos, int Owner, float Radi
     m_Owner = Owner;
     m_Radius = Radius;
     m_StartTick = Server()->Tick();
-    /*
 	m_IDs.set_size(8);
 	for(int i = 0; i < m_IDs.size(); i++)
-	{
 		m_IDs[i] = Server()->SnapNewID();
-	}
-	*/
     GameWorld()->InsertEntity(this);
 }
 
 CFreezeMine::~CFreezeMine()
 {
-    /*
 	for(int i = 0; i < m_IDs.size(); i++)
-	{
 		Server()->SnapFreeID(m_IDs[i]);
-	}
-	*/
 }
 
 void CFreezeMine::Reset()
@@ -82,9 +74,22 @@ void CFreezeMine::Snap(int SnappingClient)
     
     if(GameServer()->m_apPlayers[SnappingClient]->IsHuman())
         return;
+	
+	CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_ID, sizeof(CNetObj_Projectile)));
+	
+	if(!pObj)
+		return;
+	
+	pObj->m_X = (int)m_ActualPos.x;
+	pObj->m_Y = (int)m_ActualPos.y;
+    pObj->m_Type = WEAPON_GRENADE;
+    pObj->m_VelX = 0;
+    pObj->m_VelY = 0;
+	pObj->m_StartTick = Server()->Tick();
 
+	if(Server()->GetClientAntiPing(SnappingClient))
+		return;
 
-	/*
 	float time = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	float angle = fmodf(time*pi/2, 2.0f*pi);
 	
@@ -103,17 +108,4 @@ void CFreezeMine::Snap(int SnappingClient)
 		pObj->m_VelY = 0;
 		pObj->m_StartTick = Server()->Tick();
 	}
-	*/
-	
-	CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_ID, sizeof(CNetObj_Projectile)));
-	
-	if(!pObj)
-		return;
-	
-	pObj->m_X = (int)m_ActualPos.x;
-	pObj->m_Y = (int)m_ActualPos.y;
-    pObj->m_Type = WEAPON_GRENADE;
-    pObj->m_VelX = 0;
-    pObj->m_VelY = 0;
-	pObj->m_StartTick = Server()->Tick();
 }

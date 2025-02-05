@@ -24,7 +24,7 @@ private:
 	vec2 m_ActualPos;
 	int m_Owner;
 	
-	// array<int> m_IDs;
+	array<int> m_IDs;
 
 	int m_LifeSpan;
 

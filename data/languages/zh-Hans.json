@@ -1214,5 +1214,13 @@
 	{
 		"key": "Charging completed! Release to fire!",
 		"value": "充电完成！松手释放！"
+	},
+	{
+		"key": "Because your ping value is very high, so you have been set to antiping mode",
+		"value": "因为你的ping值很高，所以你被设置为低延迟模式"
+	},
+	{
+		"key": "Use '/antiping 0' to close",
+		"value": "使用 '/antiping 0' 关闭"
 	}
 ]}

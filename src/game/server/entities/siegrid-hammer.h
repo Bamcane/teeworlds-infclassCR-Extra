@@ -3,7 +3,7 @@
 
 #include <game/server/entity.h>
 
-const int NumIDs = 8;
+const int NumIDs = 6;
 
 // THANKS FOR FlowerFell-Sans (ST-Chara)
 class CSiegridHammer : public CEntity

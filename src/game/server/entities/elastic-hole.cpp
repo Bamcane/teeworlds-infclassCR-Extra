@@ -8,7 +8,7 @@
 #include "growingexplosion.h"
 
 CElasticHole::CElasticHole(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClientID, bool IsExplode, float MaxRadius)
-: CEntity(pGameWorld, CGameWorld::ENTTYPE_ELASTIC_HOLE)
+	: CEntity(pGameWorld, CGameWorld::ENTTYPE_ELASTIC_HOLE)
 {
 	m_Pos = CenterPos;
 	GameWorld()->InsertEntity(this);
@@ -24,15 +24,15 @@ CElasticHole::CElasticHole(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClie
 	m_StartGrowingTick = Server()->Tick();
 
 	m_IDs.set_size(NUM_IDS);
-	for(int i=0; i<NUM_IDS; i++)
+	for (int i = 0; i < NUM_IDS; i++)
 	{
 		m_IDs[i] = Server()->SnapNewID();
 	}
-	for(int i=0; i<NUM_PARTICLES; i++)
+	for (int i = 0; i < NUM_PARTICLES; i++)
 	{
 		m_ParticleIDs[i] = Server()->SnapNewID();
 	}
-	for(int i=0; i<NUM_AMMO; i++)
+	for (int i = 0; i < NUM_AMMO; i++)
 	{
 		m_AmmoIDs[i] = Server()->SnapNewID();
 	}
@@ -40,15 +40,15 @@ CElasticHole::CElasticHole(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClie
 
 CElasticHole::~CElasticHole()
 {
-	for(int i=0; i<NUM_PARTICLES; i++)
+	for (int i = 0; i < NUM_PARTICLES; i++)
 	{
 		Server()->SnapFreeID(m_ParticleIDs[i]);
 	}
-	for(int i=0; i<NUM_IDS; i++)
+	for (int i = 0; i < NUM_IDS; i++)
 	{
 		Server()->SnapFreeID(m_IDs[i]);
 	}
-	for(int i=0; i<NUM_AMMO; i++)
+	for (int i = 0; i < NUM_AMMO; i++)
 	{
 		Server()->SnapFreeID(m_AmmoIDs[i]);
 	}
@@ -56,7 +56,7 @@ CElasticHole::~CElasticHole()
 
 void CElasticHole::Explode()
 {
-	new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, 0.0), m_Owner, m_MaxRadius/32*7, GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED);
+	new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, 0.0), m_Owner, m_MaxRadius / 32 * 7, GROWINGEXPLOSIONEFFECT_ELECTRIC_INFECTED);
 	GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
 
 	Reset();
@@ -64,37 +64,38 @@ void CElasticHole::Explode()
 
 void CElasticHole::Tick()
 {
-	if(m_Radius > m_MaxRadius)
+	if (m_Radius > m_MaxRadius)
 	{
 		m_Growing = GROW_STOPING;
 		m_Radius = m_MaxRadius;
 	}
-	else if(m_Growing == GROW_GROWING)
+	else if (m_Growing == GROW_GROWING)
 		m_Radius += 2;
-	else if(m_Growing == GROW_ZOOMING)
+	else if (m_Growing == GROW_ZOOMING)
 	{
 		m_Radius -= 2;
 	}
-	if(m_LifeSpan <= 0)
+	if (m_LifeSpan <= 0)
 	{
 		m_Growing = GROW_ZOOMING;
 	}
 
 	m_LifeSpan--;
 
-	for(CCharacter *pChr = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
+	for (CCharacter *pChr = (CCharacter *)GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
 	{
-		if(pChr->IsHuman()) continue;
+		if (pChr->IsHuman())
+			continue;
 		float Len = distance(pChr->m_Pos, m_Pos);
-		if(Len < pChr->m_ProximityRadius+m_Radius)
+		if (Len < pChr->m_ProximityRadius + m_Radius)
 		{
 			vec2 Vel = pChr->GetVel();
-			pChr->SetVel(vec2(Vel.x*-1.25, Vel.y*-1.25));
+			pChr->SetVel(vec2(Vel.x * -1.25, Vel.y * -1.25));
 		}
 	}
-	if(m_Radius < 0)
+	if (m_Radius < 0)
 	{
-		if(m_IsExplode)
+		if (m_IsExplode)
 		{
 			Explode();
 		}
@@ -115,18 +116,18 @@ void CElasticHole::Reset()
 void CElasticHole::Snap(int SnappingClient)
 {
 
-	if(IsDontSnapEntity(SnappingClient, m_Pos))
+	if (IsDontSnapEntity(SnappingClient, m_Pos))
 		return;
 
 	int Degres = 0;
 
-	for(int i=0;i < CElasticHole::NUM_IDS;i++)
+	for (int i = 0; i < CElasticHole::NUM_IDS; i++)
 	{
-		vec2 StartPos = m_Pos + (GetDir(Degres*pi/180) * m_Radius);
+		vec2 StartPos = m_Pos + (GetDir(Degres * pi / 180) * m_Radius);
 		Degres += 360 / NUM_IDS;
-		vec2 EndPos = m_Pos + (GetDir(Degres*pi/180) * m_Radius);
+		vec2 EndPos = m_Pos + (GetDir(Degres * pi / 180) * m_Radius);
 		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_IDs[i], sizeof(CNetObj_Laser)));
-		if(!pObj)
+		if (!pObj)
 			return;
 
 		pObj->m_FromX = (int)StartPos.x;
@@ -134,57 +135,52 @@ void CElasticHole::Snap(int SnappingClient)
 		pObj->m_X = (int)EndPos.x;
 		pObj->m_Y = (int)EndPos.y;
 		pObj->m_StartTick = Server()->Tick();
-
-			
 	}
-	if(!Server()->GetClientAntiPing(SnappingClient))
-	{
-		for(int i=0;i < CElasticHole::NUM_PARTICLES;i++)
-		{
-			float RandomRadius = random_float()*(m_Radius-4.0f);
-			float RandomAngle = 2.0f * pi * random_float();
-			vec2 ParticlePos = m_Pos + vec2(RandomRadius * cos(RandomAngle), RandomRadius * sin(RandomAngle));
+	if (Server()->GetClientAntiPing(SnappingClient))
+		return;
 
-			CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_ParticleIDs[i], sizeof(CNetObj_Projectile)));
-			if(pObj)
-			{
-				pObj->m_X = (int)ParticlePos.x;
-				pObj->m_Y = (int)ParticlePos.y;
-				pObj->m_VelX = 0;
-				pObj->m_VelY = 0;
-				pObj->m_StartTick = Server()->Tick();
-				pObj->m_Type = WEAPON_HAMMER;
-			}
+	for (int i = 0; i < CElasticHole::NUM_PARTICLES; i++)
+	{
+		float RandomRadius = random_float() * (m_Radius - 4.0f);
+		float RandomAngle = 2.0f * pi * random_float();
+		vec2 ParticlePos = m_Pos + vec2(RandomRadius * cos(RandomAngle), RandomRadius * sin(RandomAngle));
+
+		CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_ParticleIDs[i], sizeof(CNetObj_Projectile)));
+		if (pObj)
+		{
+			pObj->m_X = (int)ParticlePos.x;
+			pObj->m_Y = (int)ParticlePos.y;
+			pObj->m_VelX = 0;
+			pObj->m_VelY = 0;
+			pObj->m_StartTick = Server()->Tick();
+			pObj->m_Type = WEAPON_HAMMER;
 		}
 	}
-	
-	/*
+
 	CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_AmmoIDs[4], sizeof(CNetObj_Projectile)));
-	if(pObj)
+	if (pObj)
 	{
 		pObj->m_X = (int)m_Pos.x;
 		pObj->m_Y = (int)m_Pos.y;
 		pObj->m_VelX = 0;
 		pObj->m_VelY = 0;
-		pObj->m_StartTick = Server()->Tick()-1;
+		pObj->m_StartTick = Server()->Tick() - 1;
 		pObj->m_Type = WEAPON_GRENADE;
 	}
 	int Angle = 0;
-	for(int i = 0 ; i < 4; i ++)
+	for (int i = 0; i < 4; i++)
 	{
-		vec2 Pos = m_Pos + (GetDir(Angle*pi/180) * m_Radius);
+		vec2 Pos = m_Pos + (GetDir(Angle * pi / 180) * m_Radius);
 		CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_AmmoIDs[i], sizeof(CNetObj_Projectile)));
-		if(pObj)
+		if (pObj)
 		{
 			pObj->m_X = (int)Pos.x;
 			pObj->m_Y = (int)Pos.y;
 			pObj->m_VelX = 0;
 			pObj->m_VelY = 0;
-			pObj->m_StartTick = Server()->Tick()-1;
+			pObj->m_StartTick = Server()->Tick() - 1;
 			pObj->m_Type = WEAPON_GRENADE;
 		}
 		Angle += 90;
 	}
-	*/
-	
 }

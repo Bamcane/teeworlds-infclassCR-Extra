@@ -181,6 +181,14 @@ void CPlayer::Tick()
 	}
 	
  	HandleTuningParams();
+
+	dbg_msg("daa", "%d", m_Latency.m_Min);
+	if(g_Config.m_InfAutoAntiping && m_Latency.m_Min > g_Config.m_InfAntipingSayWhen && !Server()->GetClientAntiPing(m_ClientID))
+	{
+		Server()->SetClientAntiPing(m_ClientID, 1);
+		GameServer()->SendChatTarget_Localization(GetCID(), CHATCATEGORY_DEFAULT, _("Because your ping value is very high, so you have been set to antiping mode"));
+		GameServer()->SendChatTarget_Localization(GetCID(), CHATCATEGORY_DEFAULT, _("Use '/antiping 0' to close"));
+	}
 }
 
 void CPlayer::PostTick()

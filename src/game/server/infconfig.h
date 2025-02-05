@@ -222,5 +222,7 @@ MACRO_CONFIG_INT(InfIonBeamsCharge, inf_ionbeams_charge, 400, 2, 500, CFGFLAG_SE
 MACRO_CONFIG_INT(InfIgnoreSpec, inf_ignore_spec, 1, 0, 1, CFGFLAG_SERVER, "Ignore spectator number when set first infection (not count as infected)")
 
 MACRO_CONFIG_INT(InfReloadTimerBug, inf_reload_timer_bug, 0, 0, 1, CFGFLAG_SERVER, "Enable reload timer bug")
+MACRO_CONFIG_INT(InfAutoAntiping, inf_auto_antiping, 1, 0, 1, CFGFLAG_SERVER, "Enable auto antiping")
+MACRO_CONFIG_INT(InfAntipingSayWhen, inf_antiping_say_when, 60, 0, 999, CFGFLAG_SERVER, "Enable auto antiping")
 
 #endif
