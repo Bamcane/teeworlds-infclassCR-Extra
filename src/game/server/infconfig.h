@@ -217,6 +217,7 @@ MACRO_CONFIG_INT(InfSiegridHammerType, inf_siegrid_hammer_type, 0, 0, 2, CFGFLAG
 
 // Be careful! Cause some code, the lowest value must be more than 1 (g_Config.m_InfIonBeamsCharge - 1)
 MACRO_CONFIG_INT(InfFlyingIonLifespan, inf_flyingion_lifespan, 150, 2, 500, CFGFLAG_SERVER, "Flying ion's lifespan (in ticks)")
+MACRO_CONFIG_INT(InfFlyingIonSlowlyGrow, inf_flyingion_slowly_grow, 0, 0, 1, CFGFLAG_SERVER, "Flying ion will growing up slowly")
 MACRO_CONFIG_INT(InfIonBeamsCharge, inf_ionbeams_charge, 400, 2, 500, CFGFLAG_SERVER, "Ion beams charging (in ticks)")
 
 MACRO_CONFIG_INT(InfIgnoreSpec, inf_ignore_spec, 1, 0, 1, CFGFLAG_SERVER, "Ignore spectator number when set first infection (not count as infected)")
