@@ -2,17 +2,14 @@
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 
 
-#include "sciogist-grenade.h"
+#include "occultist-grenade.h"
 
 #include <game/generated/protocol.h>
 #include <game/server/gamecontext.h>
 
 
-#include "elastic-hole.h"
-#include "growingexplosion.h"
-
-CSciogistGrenade::CSciogistGrenade(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir)
-: CEntity(pGameWorld, CGameWorld::ENTTYPE_SCIOGIST_GRENADE)
+COccultistGrenade::COccultistGrenade(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir)
+: CEntity(pGameWorld, CGameWorld::ENTTYPE_OCCULTIST_GRENADE)
 {
 	m_Pos = Pos;
 	m_Owner = Owner;
@@ -23,25 +20,15 @@ CSciogistGrenade::CSciogistGrenade(CGameWorld *pGameWorld, int Owner, vec2 Pos, 
 	GameWorld()->InsertEntity(this);
 }
 
-void CSciogistGrenade::Explode()
+void COccultistGrenade::Explode()
 {
 	GameServer()->CreateExplosion(m_ActualPos, m_Owner, WEAPON_GRENADE, false, TAKEDAMAGEMODE_NOINFECTION);
 	GameServer()->CreateSound(m_ActualPos, SOUND_GRENADE_EXPLODE);
-	if(m_OwnerChar && m_OwnerChar->m_HasElasticHole)
-	{
-		new CGrowingExplosion(GameWorld(), m_ActualPos, vec2(0.0, -1.0), m_Owner, 5, GROWINGEXPLOSIONEFFECT_BOOM_INFECTED);
-		new CElasticHole(GameWorld(), m_ActualPos, m_Owner, true);
-		
-		//Make it unavailable
-		m_OwnerChar->m_HasElasticHole = false;
-		m_OwnerChar->m_HasIndicator = false;
-		m_OwnerChar->GetPlayer()->ResetNumberKills();
-	}
+
 	GameServer()->m_World.DestroyEntity(this);
-	
 }
 
-void CSciogistGrenade::Tick()
+void COccultistGrenade::Tick()
 {
 	float Pt = (Server()->Tick()-m_StartTick-1)/(float)Server()->TickSpeed();
 	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
@@ -69,12 +56,12 @@ void CSciogistGrenade::Tick()
 	
 }
 
-void CSciogistGrenade::TickPaused()
+void COccultistGrenade::TickPaused()
 {
 	m_StartTick++;
 }
 
-vec2 CSciogistGrenade::GetPos(float Time)
+vec2 COccultistGrenade::GetPos(float Time)
 {
 	float Curvature = 7.0f;
 	float Speed = 1000.0f;
@@ -82,12 +69,12 @@ vec2 CSciogistGrenade::GetPos(float Time)
 	return CalcPos(m_Pos, m_Direction, Curvature, Speed, Time);
 }
 
-void CSciogistGrenade::Reset()
+void COccultistGrenade::Reset()
 {
 	GameServer()->m_World.DestroyEntity(this);
 }
 
-void CSciogistGrenade::Snap(int SnappingClient)
+void COccultistGrenade::Snap(int SnappingClient)
 {
 	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	

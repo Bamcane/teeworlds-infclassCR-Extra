@@ -538,7 +538,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		int Medic = 0;
 		int Hero = 0;
 		int Support = 0;
-		int Sciogist = 0;
+		int Occultist = 0;
 		int Reviver = 0;
 		int Doctor = 0;
 		int Siegrid = 0;
@@ -560,7 +560,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_SOLDIER:
 				case PLAYERCLASS_SCIENTIST:
 				case PLAYERCLASS_BIOLOGIST:
-				case PLAYERCLASS_CATAPULT:
+				case PLAYERCLASS_PHYSICIST:
 				case PLAYERCLASS_POLICE:
 					Defender++;
 					break;
@@ -573,8 +573,8 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_LOOPER:
 					Defender++;
 					break;
-				case PLAYERCLASS_SCIOGIST:
-					Sciogist++;
+				case PLAYERCLASS_OCCULTIST:
+					Occultist++;
 					break;
 				case PLAYERCLASS_REVIVER:
 					Reviver++;
@@ -596,8 +596,8 @@ void CGameControllerMOD::Snap(int SnappingClient)
 			ClassMask |= CMapConverter::MASK_HERO;
 		if(Support < g_Config.m_InfSupportLimit)
 			ClassMask |= CMapConverter::MASK_SUPPORT;
-		if(Sciogist < g_Config.m_InfSciogistLimit)
-			ClassMask |= CMapConverter::MASK_SCIOGIST;
+		if(Occultist < g_Config.m_InfOccultistLimit)
+			ClassMask |= CMapConverter::MASK_OCCULTIST;
 		if(Reviver < g_Config.m_InfReviverLimit)
 			ClassMask |= CMapConverter::MASK_REVIVER;
 		if(GameServer()->GetActivePlayerCount() > g_Config.m_InfMinDoctorPlayer2 && Doctor < g_Config.m_InfDoctorLimit2)
@@ -937,7 +937,7 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 	int nbHero = 0;
 	int nbMedic = 0;
 	int nbDefender = 0;
-	int nbSciogist = 0;
+	int nbOccultist = 0;
 	int nbReviver = 0;
 	int nbDoctor = 0;
 	int nbSiegrid = 0;
@@ -965,15 +965,15 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 			case PLAYERCLASS_SOLDIER:
 			case PLAYERCLASS_SCIENTIST:
 			case PLAYERCLASS_BIOLOGIST:
-			case PLAYERCLASS_CATAPULT:
+			case PLAYERCLASS_PHYSICIST:
 			case PLAYERCLASS_POLICE:
 				nbDefender++;
 				break;
 			case PLAYERCLASS_LOOPER:
 				nbDefender++;
 				break;
-			case PLAYERCLASS_SCIOGIST:
-				nbSciogist++;
+			case PLAYERCLASS_OCCULTIST:
+				nbOccultist++;
 				break;
 			case PLAYERCLASS_REVIVER:
 				nbReviver++;
@@ -1002,11 +1002,11 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 	Probability[PLAYERCLASS_BIOLOGIST - START_HUMANCLASS - 1] =
 		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableBiologist) ?
 		1.0f : 0.0f;
-	Probability[PLAYERCLASS_CATAPULT - START_HUMANCLASS - 1] =
-		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableCatapult) ?
+	Probability[PLAYERCLASS_PHYSICIST - START_HUMANCLASS - 1] =
+		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnablePhysicist) ?
 		1.0f : 0.0f;
-	Probability[PLAYERCLASS_SCIOGIST - START_HUMANCLASS - 1] =
-		(nbSciogist < g_Config.m_InfSciogistLimit && g_Config.m_InfEnableSciogist) ?
+	Probability[PLAYERCLASS_OCCULTIST - START_HUMANCLASS - 1] =
+		(nbOccultist < g_Config.m_InfOccultistLimit && g_Config.m_InfEnableOccultist) ?
 		1.0f : 0.0f;
 	Probability[PLAYERCLASS_SIEGRID - START_HUMANCLASS - 1] =
 		(!nbSiegrid && g_Config.m_InfEnableSiegrid) ?
@@ -1163,10 +1163,10 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnableScientist;
 		case PLAYERCLASS_BIOLOGIST:
 			return g_Config.m_InfEnableBiologist;
-		case PLAYERCLASS_CATAPULT:
-			return g_Config.m_InfEnableCatapult;
-		case PLAYERCLASS_SCIOGIST:
-			return g_Config.m_InfEnableSciogist;
+		case PLAYERCLASS_PHYSICIST:
+			return g_Config.m_InfEnablePhysicist;
+		case PLAYERCLASS_OCCULTIST:
+			return g_Config.m_InfEnableOccultist;
 		case PLAYERCLASS_MEDIC:
 			return g_Config.m_InfEnableMedic;
 		case PLAYERCLASS_HERO:
@@ -1204,7 +1204,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		return false;
 
 	int nbDefender = 0;
-	int nbSciogist = 0;
+	int nbOccultist = 0;
 	int nbMedic = 0;
 	int nbHero = 0;
 	int nbSupport = 0;
@@ -1237,14 +1237,14 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_SCIENTIST:
 			case PLAYERCLASS_POLICE:
 			case PLAYERCLASS_BIOLOGIST:
-			case PLAYERCLASS_CATAPULT:
+			case PLAYERCLASS_PHYSICIST:
 				nbDefender++;
 				break;
 			case PLAYERCLASS_LOOPER:
 				nbDefender++;
 				break;
-			case PLAYERCLASS_SCIOGIST:
-				nbSciogist++;
+			case PLAYERCLASS_OCCULTIST:
+				nbOccultist++;
 				break;
 			case PLAYERCLASS_REVIVER:
 				nbReviver++;
@@ -1265,7 +1265,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		case PLAYERCLASS_SCIENTIST:
 		case PLAYERCLASS_BIOLOGIST:
 		case PLAYERCLASS_POLICE:
-		case PLAYERCLASS_CATAPULT:
+		case PLAYERCLASS_PHYSICIST:
 			return (nbDefender < g_Config.m_InfDefenderLimit);
 		case PLAYERCLASS_MEDIC:
 			return (nbMedic < g_Config.m_InfMedicLimit);
@@ -1280,8 +1280,8 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			return (nbSupport < g_Config.m_InfSupportLimit);
 		case PLAYERCLASS_LOOPER:
 			return (nbDefender < g_Config.m_InfDefenderLimit);
-		case PLAYERCLASS_SCIOGIST:
-			return (nbSciogist < g_Config.m_InfSciogistLimit);
+		case PLAYERCLASS_OCCULTIST:
+			return (nbOccultist < g_Config.m_InfOccultistLimit);
 		case PLAYERCLASS_REVIVER:
 			return (nbReviver < g_Config.m_InfReviverLimit);
 		case PLAYERCLASS_DOCTOR:

@@ -35,7 +35,7 @@ public:
 		int m_SoldierScore;
 		int m_ScientistScore;
 		int m_BiologistScore;
-		int m_SciogistScore;
+		int m_OccultistScore;
 		int m_LooperScore;
 		int m_MedicScore;
 		int m_HeroScore;
@@ -44,7 +44,7 @@ public:
 		int m_SniperScore;
 		int m_ReviverScore;
 		int m_PoliceScore;
-		int m_CatapultScore;
+		int m_PhysicistScore;
 		int m_MagicianScore;
 		
 		int m_SmokerScore;

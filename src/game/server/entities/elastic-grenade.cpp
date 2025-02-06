@@ -7,6 +7,8 @@
 #include <game/server/entities/growingexplosion.h>
 
 #include "elastic-grenade.h"
+#include "elastic-hole.h"
+#include "growingexplosion.h"
 
 CElasticGrenade::CElasticGrenade(CGameWorld *pGameWorld, int Owner, int Weapon, vec2 Pos, vec2 Dir)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_ELASTIC_GRENADE)
@@ -117,13 +119,23 @@ void CElasticGrenade::Tick()
 		m_StartTick = Server()->Tick();
 		
 		m_ActualDir = normalize(m_Direction);
+
+		if(GameServer()->GetPlayerChar(m_Owner) && GameServer()->GetPlayerChar(m_Owner)->m_HasElasticHole)
+		{
+			new CGrowingExplosion(GameWorld(), m_ActualPos, vec2(0.0, -1.0), m_Owner, 5, GROWINGEXPLOSIONEFFECT_BOOM_INFECTED);
+			new CElasticHole(GameWorld(), m_ActualPos, m_Owner, true);
+			
+			//Make it unavailable
+			GameServer()->GetPlayerChar(m_Owner)->m_HasElasticHole = false;
+			GameServer()->GetPlayerChar(m_Owner)->m_HasIndicator = false;
+			GameServer()->GetPlayerChar(m_Owner)->GetPlayer()->ResetNumberKills();
+		}
 	}
 
 	if(m_LifeSpan <= 0 || m_CollisionNum >= g_Config.m_InfElasticGrenadeCheckNum)
 	{
 		Explode();
 	}
-	
 }
 
 void CElasticGrenade::FillInfo(CNetObj_Projectile *pProj)

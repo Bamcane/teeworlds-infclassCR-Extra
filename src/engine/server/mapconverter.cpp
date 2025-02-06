@@ -678,13 +678,13 @@ void CMapConverter::Finalize()
 	int ScientistImageID = AddExternalImage("../skins/toptri", 256, 128);
 	int BiologistImageID = AddExternalImage("../skins/twintri", 256, 128);
 	int LooperImageID = AddExternalImage("../skins/bluekitty", 256, 128);
-	int SciogistImageID = AddExternalImage("../skins/random", 256, 128);
+	int OccultistImageID = AddExternalImage("../skins/random", 256, 128);
 	int MedicImageID = AddExternalImage("../skins/twinbop", 256, 128);
 	int HeroImageID = AddExternalImage("../skins/redstripe", 256, 128);
 	int NinjaImageID = AddExternalImage("../skins/x_ninja", 256, 128);
 	int MercenaryImageID = AddExternalImage("../skins/bluestripe", 256, 128);
 	int SniperImageID = AddExternalImage("../skins/warpaint", 256, 128);
-	int CatapultImageID = AddExternalImage("../skins/coala", 256, 128);
+	int PhysicistImageID = AddExternalImage("../skins/coala", 256, 128);
 	int PoliceImageID = AddExternalImage("../skins/kitty_x_ninja", 256, 128);
 	int ReviverImageID = AddExternalImage("../skins/coala_limekitty", 256, 128);
 	int MagicianImageID = AddExternalImage("../skins/redbopp", 256, 128);
@@ -770,7 +770,7 @@ void CMapConverter::Finalize()
 						case MENUCLASS_SOLDIER:
 						case MENUCLASS_SCIENTIST:
 						case MENUCLASS_BIOLOGIST:
-						case MENUCLASS_CATAPULT:
+						case MENUCLASS_PHYSICIST:
 						case MENUCLASS_POLICE:
 							ClassMask = MASK_DEFENDER;
 							break;
@@ -786,8 +786,8 @@ void CMapConverter::Finalize()
 						case MENUCLASS_REVIVER:
 							ClassMask = MASK_REVIVER;
 							break;
-						case MENUCLASS_SCIOGIST:
-							ClassMask = MASK_SCIOGIST;
+						case MENUCLASS_OCCULTIST:
+							ClassMask = MASK_OCCULTIST;
 							break;
 						case MENUCLASS_SIEGRID:
 							ClassMask = MASK_SIEGRID;
@@ -936,11 +936,11 @@ void CMapConverter::Finalize()
 							case MENUCLASS_BIOLOGIST:
 								AddTeeLayer("Biologist", BiologistImageID, Pos, 64.0f, m_NumEnvs-1);
 								break;
-							case MENUCLASS_SCIOGIST:
-								AddTeeLayer("Sciogist", SciogistImageID, Pos, 64.0f, m_NumEnvs-1);
+							case MENUCLASS_OCCULTIST:
+								AddTeeLayer("Occultist", OccultistImageID, Pos, 64.0f, m_NumEnvs-1);
 								break;
-							case MENUCLASS_CATAPULT:
-								AddTeeLayer("Catapult", CatapultImageID, Pos, 64.0f, m_NumEnvs-1);
+							case MENUCLASS_PHYSICIST:
+								AddTeeLayer("Physicist", PhysicistImageID, Pos, 64.0f, m_NumEnvs-1);
 								break;
 							case MENUCLASS_LOOPER:
 								AddTeeLayer("Looper", LooperImageID, Pos, 64.0f, m_NumEnvs-1);

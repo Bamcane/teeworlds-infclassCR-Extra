@@ -1,24 +1,23 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
-#ifndef GAME_SERVER_ENTITIES_ANTI_AIRMINE_H
-#define GAME_SERVER_ENTITIES_ANTI_AIRMINE_H
+#ifndef GAME_SERVER_ENTITIES_DEFENCE_CIRCLE_H
+#define GAME_SERVER_ENTITIES_DEFENCE_CIRCLE_H
 
 #include <game/server/entity.h>
 
-class CAntiAirMine : public CEntity
+class CDefenceCircle : public CEntity
 {
 
 public:
     enum
     {
-        NUM_LASERS = 4,
-        NUM_AMMOS = NUM_LASERS
+        NUM_PIECES = 4,
     };
 
 public:
 
-	CAntiAirMine(CGameWorld *pGameWorld, vec2 Pos, int Owner);
-	virtual ~CAntiAirMine();
+	CDefenceCircle(CGameWorld *pGameWorld, vec2 Pos, int Owner);
+	virtual ~CDefenceCircle();
 
 	virtual void Snap(int SnappingClient);
 	virtual void Reset();
@@ -27,18 +26,11 @@ public:
 
 	int GetOwner() const;
 	void Explode();
-    void MovePlayer();
-
-    int m_AttackNow;
 
 private:
-    vec2 m_LaserPos[NUM_LASERS];
     int m_StartTick;
-    int m_LifeSpan;
     int m_Owner;
-    int m_Angle;
-    int m_LaserIDs[NUM_LASERS];
-    int m_AmmoIDs[NUM_AMMOS];
+    int m_PiecesIDs[NUM_PIECES];
 
 };
 

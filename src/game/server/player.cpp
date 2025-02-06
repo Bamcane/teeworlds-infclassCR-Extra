@@ -357,7 +357,7 @@ void CPlayer::Snap(int SnappingClient)
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
 			break;
-		case PLAYERCLASS_CATAPULT:
+		case PLAYERCLASS_PHYSICIST:
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "coala", sizeof(m_TeeInfos.m_SkinName));
 			break;
@@ -365,7 +365,7 @@ void CPlayer::Snap(int SnappingClient)
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "twintri", sizeof(m_TeeInfos.m_SkinName));
 			break;
-		case PLAYERCLASS_SCIOGIST:
+		case PLAYERCLASS_OCCULTIST:
 			if(info.m_Solar)
 			{
 				m_TeeInfos.m_UseCustomColor = 1;

@@ -26,9 +26,8 @@ CSiegridHammer::CSiegridHammer(CGameWorld *pGameWorld, int Owner, vec2 Pos)
     GameWorld()->InsertEntity(this);
 }
 
-void CSiegridHammer::Reset()
+CSiegridHammer::~CSiegridHammer()
 {
-    GameWorld()->DestroyEntity(this);
     for (int i = 0; i < NumIDs; i++)
         Server()->SnapFreeID(m_aIDs[i]);
 }
@@ -37,12 +36,6 @@ void CSiegridHammer::Tick()
 {
     if(m_MarkedForDestroy)
         return;
-
-    if(!GameServer()->GetPlayerChar(m_Owner))
-    {
-        Reset();
-        return;
-    }
 
     CCharacter *aEnts[MAX_CLIENTS];
     float Radius = 128.f;

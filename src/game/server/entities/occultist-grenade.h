@@ -5,10 +5,10 @@
 
 #include <game/server/entity.h>
 
-class CSciogistGrenade : public CEntity
+class COccultistGrenade : public CEntity
 {
 public:
-	CSciogistGrenade(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir);
+	COccultistGrenade(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir);
 
 	virtual void Reset();
 	virtual void Tick();

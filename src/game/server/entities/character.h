@@ -224,7 +224,7 @@ public:
 	int m_PositionLockTick;
 	bool m_PositionLocked;
 	bool m_PositionLockAvailable;
-	bool m_HasAntiAirMine;
+	bool m_HasDefenceCircle;
 	bool m_HasWhiteHole;
 	bool m_HasElasticHole;
 	bool m_HasHealBoom;

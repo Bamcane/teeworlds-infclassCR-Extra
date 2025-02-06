@@ -181,8 +181,8 @@ const char *CGameContext::GetClassName(int Class)
 		case PLAYERCLASS_SCIENTIST: return ("Scientist");break;
 		case PLAYERCLASS_BIOLOGIST: return ("Biologist");break;
 		case PLAYERCLASS_LOOPER: return ("Looper");break;
-		case PLAYERCLASS_SCIOGIST: return ("Sciogist");break;
-		case PLAYERCLASS_CATAPULT: return ("Catapult");break;
+		case PLAYERCLASS_OCCULTIST: return ("Occultist");break;
+		case PLAYERCLASS_PHYSICIST: return ("Physicist");break;
 		case PLAYERCLASS_POLICE: return ("Police");break;
 		case PLAYERCLASS_REVIVER: return ("Reviver");break;
 		case PLAYERCLASS_MAGICIAN: return ("Magician");break;
@@ -2901,8 +2901,8 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "soldier") == 0) pPlayer->SetClass(PLAYERCLASS_SOLDIER);
 	else if(str_comp(pClassName, "scientist") == 0) pPlayer->SetClass(PLAYERCLASS_SCIENTIST);
 	else if(str_comp(pClassName, "biologist") == 0) pPlayer->SetClass(PLAYERCLASS_BIOLOGIST);
-	else if(str_comp(pClassName, "catapult") == 0) pPlayer->SetClass(PLAYERCLASS_CATAPULT);
-	else if(str_comp(pClassName, "sciogist") == 0) pPlayer->SetClass(PLAYERCLASS_SCIOGIST);
+	else if(str_comp(pClassName, "physicist") == 0) pPlayer->SetClass(PLAYERCLASS_PHYSICIST);
+	else if(str_comp(pClassName, "occultist") == 0) pPlayer->SetClass(PLAYERCLASS_OCCULTIST);
 	else if(str_comp(pClassName, "reviver") == 0) pPlayer->SetClass(PLAYERCLASS_REVIVER);
 	else if(str_comp(pClassName, "magician") == 0) pPlayer->SetClass(PLAYERCLASS_MAGICIAN);
 	else if(str_comp(pClassName, "joker") == 0) pPlayer->SetClass(PLAYERCLASS_JOKER);
@@ -3065,20 +3065,20 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 				CheckClass = PLAYERCLASS_SCIENTIST;
 				str_copy(aChatTitle, "scientist", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "!catapult") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!physicist") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
-				CheckClass = PLAYERCLASS_CATAPULT;
-				str_copy(aChatTitle, "catapult", sizeof(aChatTitle));
+				CheckClass = PLAYERCLASS_PHYSICIST;
+				str_copy(aChatTitle, "physicist", sizeof(aChatTitle));
 			}
 			else if(str_comp(aNameFound, "!biologist") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_BIOLOGIST;
 				str_copy(aChatTitle, "biologist", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "!sciogist") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!occultist") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
-				CheckClass = PLAYERCLASS_SCIOGIST;
-				str_copy(aChatTitle, "sciogist", sizeof(aChatTitle));
+				CheckClass = PLAYERCLASS_OCCULTIST;
+				str_copy(aChatTitle, "occultist", sizeof(aChatTitle));
 			}
 			else if(str_comp(aNameFound, "!police") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
@@ -3536,33 +3536,35 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
-		else if(str_comp_nocase(pHelpPage, "sciogist") == 0)
+		else if(str_comp_nocase(pHelpPage, "occultist") == 0)
 		{
 			Buffer.append("~~ ");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Sciogist"), NULL); 
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Occultist"), NULL); 
 			Buffer.append(" ~~\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Sciogist can pose floating anti-airmines with his hammer."), NULL); 
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Occultist can pose floating defence-circle with his hammer."), NULL); 
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Mine is limited 1 per player at the same time"), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Circle is limited 1 per player at the same time"), NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He also has fire 3 time grenades . And he has a shotgun with bouncing bullets"), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Additionally he can place elastic holes with the grenades.\n that explode will damage anything."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He can freeze plenty of infecteds by his laser rifle."), NULL);
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
-		else if(str_comp_nocase(pHelpPage, "catapult") == 0)
+		else if(str_comp_nocase(pHelpPage, "physicist") == 0)
 		{
 			Buffer.append("~~ ");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Catapult"), NULL); 
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Physicist"), NULL); 
 			Buffer.append(" ~~\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Catapult can use elastic grenades."), NULL); 
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Physicist can use elastic grenades."), NULL); 
 			Buffer.append("\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He also has a laser-rifle that can fire a elastic entity."), NULL); 
 			Buffer.append("\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("It will bounce back and explode. Then repeat the loop until it disappears."), NULL); 
 			Buffer.append("\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("If elastic entity disappeared. its will create many laser and explode."), NULL); 
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Additionally he can place elastic holes with the grenades.\n that explode will damage anything."), NULL);
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
 		else if(str_comp_nocase(pHelpPage, "police") == 0)
@@ -3598,9 +3600,9 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append(" ~~\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Magician can use hammer to kill the zombies."), NULL); 
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He has also magic grenades that teleport and hide him."), NULL); 
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He has also magic gun that teleport and hide him."), NULL); 
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("And he has a gun to shoot grenades."), NULL); 
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("And he has a grenade to shoot grenades."), NULL); 
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
 		else if(str_comp_nocase(pHelpPage, "biologist") == 0)
@@ -4120,7 +4122,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 		);
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", Buffer.buffer());
 		
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "engineer, soldier, scientist, sciogist , catapult, police, reviver, magician, medic, hero, ninja, mercenary, sniper, whiteHole");		
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "engineer, soldier, scientist, occultist , physicist, police, reviver, magician, medic, hero, ninja, mercenary, sniper, whiteHole");		
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "smoker, hunter, bat, boomer, ghost, spider, slug, slime , ghoul, voodoo, undead, witch, freezer, nightmare.");		
 	}
 	

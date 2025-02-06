@@ -10,8 +10,8 @@ class CSiegridHammer : public CEntity
 {
 public:
     CSiegridHammer(CGameWorld *pGameWorld, int Owner, vec2 Pos);
+    ~CSiegridHammer();
 
-    virtual void Reset();
     virtual void Tick();
     virtual void Snap(int SnappingClient);
 
