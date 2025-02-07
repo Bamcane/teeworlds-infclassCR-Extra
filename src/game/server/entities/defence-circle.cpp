@@ -89,7 +89,7 @@ void CDefenceCircle::Tick()
 		float Len = distance(p->m_Pos, m_Pos);
 		if(Len < p->m_ProximityRadius + g_Config.m_InfDefenceCircleRadius)
 		{
-			Explode();
+			Explode(p->m_Pos);
 			return;
 		}
 	}
