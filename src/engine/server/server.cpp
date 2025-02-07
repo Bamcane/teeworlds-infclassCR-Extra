@@ -57,6 +57,30 @@
 	#include "measure_ticks.h"
 #endif
 
+#ifdef CONF_SANITIZE
+#include <sanitizer/lsan_interface.h>
+void CheckLeaks() {
+    __lsan_do_leak_check();
+}
+#endif
+
+#include <csignal>
+volatile sig_atomic_t InterruptSignaled = 0;
+
+bool IsInterrupted()
+{
+	return InterruptSignaled;
+}
+
+void HandleSigIntTerm(int Param)
+{
+	InterruptSignaled = 1;
+
+	// Exit the next time a signal is received
+	signal(SIGINT, SIG_DFL);
+	signal(SIGTERM, SIG_DFL);
+}
+
 static const char *StrLtrim(const char *pStr)
 {
 	while(*pStr && *pStr >= 0 && *pStr <= 32)
@@ -2351,6 +2375,12 @@ int CServer::Run()
 #if defined(MEASURE_TICKS)
 			MeasureTicks.End();
 #endif
+
+			if (IsInterrupted())
+			{
+				Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", "interrupted");
+				break;
+			}
 		}
 	}
 	// disconnect all clients on shutdown
@@ -2720,6 +2750,10 @@ static CServer *CreateServer() { return new CServer(); }
 
 int main(int argc, const char **argv) // ignore_convention
 {
+#ifdef CONF_SANITIZE
+	atexit(CheckLeaks);
+#endif
+
 #if defined(CONF_FAMILY_WINDOWS)
 	for(int i = 1; i < argc; i++) // ignore_convention
 	{
@@ -2736,6 +2770,9 @@ int main(int argc, const char **argv) // ignore_convention
 		dbg_msg("secure", "could not initialize secure RNG");
 		return -1;
 	}
+
+	signal(SIGINT, HandleSigIntTerm);
+	signal(SIGTERM, HandleSigIntTerm);
 
 	CServer *pServer = CreateServer();
 	IKernel *pKernel = IKernel::Create();

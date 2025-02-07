@@ -182,7 +182,6 @@ void CPlayer::Tick()
 	
  	HandleTuningParams();
 
-	dbg_msg("daa", "%d", m_Latency.m_Min);
 	if(g_Config.m_InfAutoAntiping && m_Latency.m_Min > g_Config.m_InfAntipingSayWhen && !Server()->GetClientAntiPing(m_ClientID))
 	{
 		Server()->SetClientAntiPing(m_ClientID, 1);

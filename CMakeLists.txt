@@ -57,6 +57,7 @@ option(USE_CONAN "Use Conan for dependencies" ${USE_CONAN_DEFAULT})
 option(GEOLOCATION "Enable geolocation support" ${GEOLOCATION_DEFAULT})
 option(MYSQL "Enable mysql support" OFF)
 option(DOWNLOAD_GTEST "Download and compile GTest" ${AUTO_DEPENDENCIES_DEFAULT})
+option(SANITIZE "Enable sanitize" OFF)
 
 # Set the default build type to Release
 if(NOT(CMAKE_BUILD_TYPE))
@@ -759,6 +760,11 @@ foreach(target ${TARGETS_OWN})
     target_compile_definitions(${target} PRIVATE NOMINMAX) # windows.h shouldn't define min/max macros
     target_compile_definitions(${target} PRIVATE UNICODE) # Windows headers
     target_compile_definitions(${target} PRIVATE _UNICODE) # C-runtime
+  endif()
+,,
+  if(SANITIZE)
+    target_link_options(${target} PUBLIC $<$<AND:$<CXX_COMPILER_ID:GNU>,$<PLATFORM_ID:Linux>>:-fsanitize=address -static-libasan>)
+    target_compile_definitions(${target} PRIVATE CONF_SANITIZE )
   endif()
 
   target_compile_definitions(${target} PRIVATE $<$<CONFIG:Debug>:CONF_DEBUG>)
