@@ -5,7 +5,7 @@
 #include "superweapon-indicator.h"
 
 CSuperWeaponIndicator::CSuperWeaponIndicator(CGameWorld *pGameWorld, vec2 Pos, int Owner)
-: CEntity(pGameWorld, CGameWorld::ENTTYPE_SUPERWEAPON_INDICATOR)
+	: CEntity(pGameWorld, CGameWorld::ENTTYPE_SUPERWEAPON_INDICATOR)
 {
 	m_Pos = Pos;
 	GameWorld()->InsertEntity(this);
@@ -13,11 +13,11 @@ CSuperWeaponIndicator::CSuperWeaponIndicator(CGameWorld *pGameWorld, vec2 Pos, i
 	m_StartTick = Server()->Tick();
 	m_Owner = Owner;
 	m_OwnerChar = GameServer()->GetPlayerChar(m_Owner);
-	m_warmUpCounter = Server()->TickSpeed()*3;
+	m_warmUpCounter = Server()->TickSpeed() * 3;
 	m_IsWarmingUp = true;
-	
+
 	m_IDs.set_size(3);
-	for(int i=0; i<m_IDs.size(); i++)
+	for (int i = 0; i < m_IDs.size(); i++)
 	{
 		m_IDs[i] = Server()->SnapNewID();
 	}
@@ -25,7 +25,7 @@ CSuperWeaponIndicator::CSuperWeaponIndicator(CGameWorld *pGameWorld, vec2 Pos, i
 
 CSuperWeaponIndicator::~CSuperWeaponIndicator()
 {
-	for(int i=0; i<m_IDs.size(); i++)
+	for (int i = 0; i < m_IDs.size(); i++)
 		Server()->SnapFreeID(m_IDs[i]);
 }
 
@@ -41,21 +41,22 @@ int CSuperWeaponIndicator::GetOwner() const
 
 void CSuperWeaponIndicator::Snap(int SnappingClient)
 {
-	if(IsDontSnapEntity(SnappingClient))
+	if (IsDontSnapEntity(SnappingClient))
 		return;
+
 	if (Server()->GetClientAntiPing(SnappingClient))
 		return;
 
-	float time = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
-	float angle = fmodf(time*pi/2, 2.0f*pi);
-	
-	for(int i=0; i<m_IDs.size(); i++)
-	{	
-		float shiftedAngle = angle + 2.0*pi*static_cast<float>(i)/static_cast<float>(m_IDs.size());
-		
+	float time = (Server()->Tick() - m_StartTick) / (float)Server()->TickSpeed();
+	float angle = fmodf(time * pi / 2, 2.0f * pi);
+
+	for (int i = 0; i < m_IDs.size(); i++)
+	{
+		float shiftedAngle = angle + 2.0 * pi * static_cast<float>(i) / static_cast<float>(m_IDs.size());
+
 		CNetObj_Projectile *pProj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_IDs[i], sizeof(CNetObj_Projectile)));
-		pProj->m_X = (int)(m_Pos.x + m_Radius*cos(shiftedAngle));
-		pProj->m_Y = (int)(m_Pos.y + m_Radius*sin(shiftedAngle));
+		pProj->m_X = (int)(m_Pos.x + m_Radius * cos(shiftedAngle));
+		pProj->m_Y = (int)(m_Pos.y + m_Radius * sin(shiftedAngle));
 		pProj->m_VelX = 0;
 		pProj->m_VelY = 0;
 		pProj->m_StartTick = Server()->Tick();
@@ -65,52 +66,51 @@ void CSuperWeaponIndicator::Snap(int SnappingClient)
 
 void CSuperWeaponIndicator::Tick()
 {
-	if(m_MarkedForDestroy) return;
-	if (!m_OwnerChar) return;
+	if (m_MarkedForDestroy)
+		return;
+	if (!m_OwnerChar)
+		return;
 
-	//refresh indicator position
+	// refresh indicator position
 	m_Pos = m_OwnerChar->m_Core.m_Pos;
-	
-	if (m_IsWarmingUp) 
+
+	if (m_IsWarmingUp)
 	{
-		if ( m_warmUpCounter > 0 ) 
+		if (m_warmUpCounter > 0)
 		{
 			m_warmUpCounter--;
-		} else if(m_OwnerChar->GetClass() == PLAYERCLASS_SCIENTIST){
-			m_IsWarmingUp = false;
-			m_OwnerChar->m_HasWhiteHole = true;
-			m_OwnerChar->m_BroadcastWhiteHoleReady = Server()->Tick();
-			GameServer()->SendChatTarget_Localization(m_Owner, CHATCATEGORY_SCORE, _("white hole ready, your laser rifle now disrupts space time"), NULL);	
-		} else if(m_OwnerChar->GetClass() == PLAYERCLASS_OCCULTIST)
-		{
-			m_IsWarmingUp = false;
-			m_OwnerChar->m_HasElasticHole = true;
-			m_OwnerChar->m_BroadcastElasticHoleReady = Server()->Tick();
-			GameServer()->SendChatTarget_Localization(m_Owner, CHATCATEGORY_SCORE, _("elastic hole ready, your grenade now disrupts space time"), NULL);	
-		} else
-		{
-			m_IsWarmingUp = false;
-			m_OwnerChar->m_HasHealBoom = true;
-			m_OwnerChar->m_BroadcastHealBoomReady = Server()->Tick();
-			GameServer()->SendChatTarget_Localization(m_Owner, CHATCATEGORY_SCORE, _("heal boom ready, your laser rifle now disrupts space time"), NULL);	
 		}
-	} 
-	else 	
+		else
+		{
+			m_IsWarmingUp = false;
+			if (m_OwnerChar->GetClass() == PLAYERCLASS_SCIENTIST)
+			{
+				m_OwnerChar->m_HasWhiteHole = true;
+				m_OwnerChar->m_BroadcastWhiteHoleReady = Server()->Tick();
+				GameServer()->SendChatTarget_Localization(m_Owner, CHATCATEGORY_SCORE, _("white hole ready, your laser rifle now disrupts space time"), NULL);
+			}
+			else if (m_OwnerChar->GetClass() == PLAYERCLASS_PHYSICIST)
+			{
+				m_OwnerChar->m_HasElasticHole = true;
+				m_OwnerChar->m_BroadcastElasticHoleReady = Server()->Tick();
+				GameServer()->SendChatTarget_Localization(m_Owner, CHATCATEGORY_SCORE, _("elastic hole ready, your grenade now disrupts space time"), NULL);
+			}
+			else
+			{
+				m_OwnerChar->m_HasHealBoom = true;
+				m_OwnerChar->m_BroadcastHealBoomReady = Server()->Tick();
+				GameServer()->SendChatTarget_Localization(m_Owner, CHATCATEGORY_SCORE, _("heal boom ready, your laser rifle now disrupts space time"), NULL);
+			}
+		}
+	}
+	else
 	{
-		if (m_OwnerChar->m_HasWhiteHole == false)
-		{
-			GameServer()->m_World.DestroyEntity(this);
-			return; // Do not proceed after destruction
-		} 
-		if (m_OwnerChar->m_HasElasticHole == false)
+		if (m_OwnerChar->m_HasWhiteHole == false ||
+			m_OwnerChar->m_HasElasticHole == false ||
+			m_OwnerChar->m_HasHealBoom == false)
 		{
 			GameServer()->m_World.DestroyEntity(this);
 			return; // Do not proceed after destruction
 		}
-		if (m_OwnerChar->m_HasHealBoom == false)
-		{
-			GameServer()->m_World.DestroyEntity(this);
-			return; // Do not proceed after destruction
-		} 
 	}
 }

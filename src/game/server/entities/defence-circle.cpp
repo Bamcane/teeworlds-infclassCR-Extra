@@ -40,7 +40,7 @@ int CDefenceCircle::GetOwner() const
 void CDefenceCircle::Explode()
 {
 	float Radius = g_Config.m_InfDefenceCircleRadius;
-	GameServer()->CreateExplosionDisk(m_Pos, Radius, Radius, g_Config.m_InfDefenceCircleDamage,
+	GameServer()->CreateExplosionDisk(m_Pos, Radius/4.f, Radius, g_Config.m_InfDefenceCircleDamage,
 									  32.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_SELFHARM);
 
 	if (GameServer()->GetPlayerChar(m_Owner))
