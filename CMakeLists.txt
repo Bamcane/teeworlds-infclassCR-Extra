@@ -761,7 +761,7 @@ foreach(target ${TARGETS_OWN})
     target_compile_definitions(${target} PRIVATE UNICODE) # Windows headers
     target_compile_definitions(${target} PRIVATE _UNICODE) # C-runtime
   endif()
-,,
+
   if(SANITIZE)
     target_link_options(${target} PUBLIC $<$<AND:$<CXX_COMPILER_ID:GNU>,$<PLATFORM_ID:Linux>>:-fsanitize=address -static-libasan>)
     target_compile_definitions(${target} PRIVATE CONF_SANITIZE )
