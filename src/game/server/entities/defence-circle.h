@@ -25,7 +25,7 @@ public:
 	virtual void Tick();
 
 	int GetOwner() const;
-	void Explode();
+	void Explode(vec2 Target);
 
 private:
     int m_StartTick;
